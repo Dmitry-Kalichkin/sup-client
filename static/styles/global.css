@@ -1,0 +1,9 @@
+:root {
+    --brand-color: #de4e2a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font: 1em sans-serif;
+}
