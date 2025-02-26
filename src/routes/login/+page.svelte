@@ -4,13 +4,18 @@
 
     let username = $state('');
     let password = $state('');
+    let isResponseSuccessful = $state(true);
 
     function onsubmit(e: SubmitEvent) {
         if (isFormInvalid()) {
             return;
         }
-        const creds: Credentials = {username: username, password: password};
-        userService.login(creds);
+        try {
+            const creds: Credentials = {username: username, password: password};
+            userService.login(creds);
+        } catch (e) {
+            isResponseSuccessful = false;
+        }
     }
 
     function isFormInvalid(): boolean {
@@ -32,6 +37,11 @@
             <input id="password" type="password" bind:value={password} placeholder="Пароль">
         </div>
         <button type="submit">Войти</button>
+        {#if !isResponseSuccessful}
+            <div class="server-error-block">
+                Неверный логин или пароль
+            </div>
+        {/if}
     </form>
 </div>
 
@@ -83,4 +93,10 @@
         color: white;
         cursor: pointer;
     }
+
+    .server-error-block {
+        color: red;
+        text-align: center;
+    }
+
 </style>
