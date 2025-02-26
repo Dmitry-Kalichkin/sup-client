@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { authorized, role } from '$lib/stores/UserStore';
+    import userService from '$lib/service/UserService';
     import { Role } from "$lib/data/user/Role";
 
-    let isManager = $derived($authorized && ($role === Role.ADMIN || $role === Role.DEANERY));
+    let isManager = userService.isAuthorized() && (userService.getRole() === Role.ADMIN || userService.getRole() === Role.DEANERY);
 </script>
 
 <header>
@@ -21,13 +21,14 @@
         {#if isManager}
             <a href="/users">Пользователи</a>
         {/if}
-        {#if $authorized}
+        {#if userService.isAuthorized()}
             <a href="/skips/my">Мои пропуски</a>
         {/if}
     </nav>
     <nav>
-        {#if $authorized}
-            <a href="/profile">Пользователь</a>
+        {#if userService.isAuthorized()}
+            <a href="/profile">{userService.getUsername()}</a>
+            <a href="#" onclick={() => userService.logout()}>Выйти</a>
         {:else}
             <a href="/login">Вход</a>
         {/if}

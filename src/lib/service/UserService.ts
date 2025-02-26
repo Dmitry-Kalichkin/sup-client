@@ -21,12 +21,22 @@ class UserService {
         return this.authContext.getRole();
     }
 
+    public getUsername(): string | null {
+        return this.authContext.getUsername();
+    }
+
     public login(credentials: Credentials) {
         const token: string = this.userClient.login(credentials);
         const user: User = this.userClient.getProfile(token);
         this.authContext.setToken(token);
         this.authContext.setUsername(user.username);
         this.authContext.setRole(user.role);
+    }
+
+    public logout() {
+        this.authContext.removeToken();
+        this.authContext.removeUsername();
+        this.authContext.removeRole();
     }
 }
 

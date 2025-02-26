@@ -18,12 +18,20 @@ export class AuthContext {
         this.localStorage.setItem(AuthContext.TOKEN_KEY, token);
     }
 
+    public removeToken() {
+        this.localStorage.removeItem(AuthContext.TOKEN_KEY);
+    }
+
     public getUsername(): string | null {
         return this.localStorage.getItem(AuthContext.USERNAME_KEY);
     }
 
     public setUsername(username: string) {
         this.localStorage.setItem(AuthContext.USERNAME_KEY, username);
+    }
+
+    public removeUsername() {
+        this.localStorage.removeItem(AuthContext.USERNAME_KEY);
     }
 
     public getRole(): Role | null {
@@ -33,6 +41,10 @@ export class AuthContext {
 
     public setRole(role: Role) {
         this.localStorage.setItem(AuthContext.ROLE_KEY, role);
+    }
+
+    public removeRole() {
+        this.localStorage.removeItem(AuthContext.ROLE_KEY);
     }
 }
 

@@ -21,7 +21,7 @@
 
     function isFormInvalid(): boolean {
         validated = true;
-        return username.trim().length == 0 || password.trim().length < 8;
+        return username.trim().length == 0 || password.trim().length < 4;
     }
 </script>
 
@@ -42,9 +42,9 @@
         <div class="input-block">
             <label for="password">Пароль</label>
             <input id="password" type="password" bind:value={password} placeholder="Пароль">
-            {#if validated && password.trim().length < 8}
+            {#if validated && password.trim().length < 4}
                 <div class="invalid">
-                    Пароль должен быть не менее 8 символов
+                    Пароль должен быть не менее 4 символов
                 </div>
             {/if}
         </div>
