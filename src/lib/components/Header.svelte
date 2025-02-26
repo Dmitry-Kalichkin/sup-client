@@ -1,8 +1,6 @@
 <script lang="ts">
     import userService from '$lib/service/UserService';
     import { Role } from "$lib/data/user/Role";
-
-    let isManager = userService.isAuthorized() && (userService.getRole() === Role.ADMIN || userService.getRole() === Role.DEANERY);
 </script>
 
 <header>
@@ -15,10 +13,10 @@
                 Пропусков
             </p>
         </a>
-        {#if isManager}
+        {#if userService.isManager()}
             <a href="/skips">Пропуски</a>
         {/if}
-        {#if isManager}
+        {#if userService.isManager()}
             <a href="/users">Пользователи</a>
         {/if}
         {#if userService.isAuthorized()}

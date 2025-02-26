@@ -1,6 +1,6 @@
 import { AuthContext, authContext } from '$lib/context/AuthContext';
 import { UserClient, userClient } from '$lib/client/UserClient';
-import type { Role } from '$lib/data/user/Role';
+import { Role } from '$lib/data/user/Role';
 import type { Credentials } from '$lib/data/user/Credentials';
 import type { User } from '$lib/data/user/User';
 
@@ -11,6 +11,10 @@ class UserService {
     constructor(authContext: AuthContext, userClient: UserClient) {
         this.authContext = authContext;
         this.userClient = userClient;
+    }
+
+    public isManager(): boolean {
+        return this.isAuthorized() && (this.getRole() === Role.ADMIN || this.getRole() === Role.DEANERY)
     }
 
     public isAuthorized(): boolean {
@@ -31,12 +35,14 @@ class UserService {
         this.authContext.setToken(token);
         this.authContext.setUsername(user.username);
         this.authContext.setRole(user.role);
+        window.location.reload();
     }
 
     public logout() {
         this.authContext.removeToken();
         this.authContext.removeUsername();
         this.authContext.removeRole();
+        window.location.reload();
     }
 }
 
