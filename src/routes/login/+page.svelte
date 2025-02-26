@@ -1,6 +1,6 @@
 <script lang="ts">
     import userService from '$lib/service/UserService';
-    import type { Credentials } from "$lib/data/Credentials";
+    import type { Credentials } from "$lib/data/user/Credentials";
 
     let username = $state('');
     let password = $state('');

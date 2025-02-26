@@ -1,4 +1,4 @@
-import { Role } from "$lib/data/Role";
+import { Role } from "$lib/data/user/Role";
 
 export class AuthContext {
     private static readonly TOKEN_KEY = "token";

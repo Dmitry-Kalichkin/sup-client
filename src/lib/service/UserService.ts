@@ -1,27 +1,33 @@
 import { AuthContext, authContext } from '$lib/context/AuthContext';
-import type { Role } from '$lib/data/Role';
-import type { Credentials } from '$lib/data/Credentials';
+import { UserClient, userClient } from '$lib/client/UserClient';
+import type { Role } from '$lib/data/user/Role';
+import type { Credentials } from '$lib/data/user/Credentials';
+import type { User } from '$lib/data/user/User';
 
 class UserService {
     private readonly authContext: AuthContext;
-    private readonly url: string;
+    private readonly userClient: UserClient;
 
-    constructor(authContext: AuthContext, url: string) {
+    constructor(authContext: AuthContext, userClient: UserClient) {
         this.authContext = authContext;
-        this.url = url;
+        this.userClient = userClient;
     }
 
     public isAuthorized(): boolean {
-        return authContext.getToken() !== null;
+        return this.authContext.getToken() !== null;
     }
 
     public getRole(): Role | null {
-        return authContext.getRole();
+        return this.authContext.getRole();
     }
 
     public login(credentials: Credentials) {
-        console.log(credentials);
+        const token: string = this.userClient.login(credentials);
+        const user: User = this.userClient.getProfile(token);
+        this.authContext.setToken(token);
+        this.authContext.setUsername(user.username);
+        this.authContext.setRole(user.role);
     }
 }
 
-export default new UserService(authContext, '');
+export default new UserService(authContext, userClient);

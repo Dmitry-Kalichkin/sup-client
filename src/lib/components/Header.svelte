@@ -1,6 +1,6 @@
 <script lang="ts">
     import { authorized, role } from '$lib/stores/UserStore';
-    import { Role } from "$lib/data/Role";
+    import { Role } from "$lib/data/user/Role";
 
     let isManager = $derived($authorized && ($role === Role.ADMIN || $role === Role.DEANERY));
 </script>
