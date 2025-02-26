@@ -1,5 +1,6 @@
 import { AuthContext, authContext } from '$lib/context/AuthContext';
-import { Role } from '$lib/data/Role';
+import type { Role } from '$lib/data/Role';
+import type { Credentials } from '$lib/data/Credentials';
 
 class UserService {
     private readonly authContext: AuthContext;
@@ -16,6 +17,10 @@ class UserService {
 
     public getRole(): Role | null {
         return authContext.getRole();
+    }
+
+    public login(credentials: Credentials) {
+        console.log(credentials);
     }
 }
 
