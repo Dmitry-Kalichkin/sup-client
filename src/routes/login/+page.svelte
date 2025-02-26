@@ -4,6 +4,7 @@
 
     let username = $state('');
     let password = $state('');
+    let validated = $state(false);
     let isResponseSuccessful = $state(true);
 
     function onsubmit(e: SubmitEvent) {
@@ -19,7 +20,8 @@
     }
 
     function isFormInvalid(): boolean {
-        return false;
+        validated = true;
+        return username.trim().length == 0 || password.trim().length < 8;
     }
 </script>
 
@@ -27,18 +29,28 @@
     <h1>
         Войти
     </h1>
-    <form {onsubmit}>
+    <form {onsubmit} onchange={() => validated = false}>
         <div class="input-block">
             <label for="username">Логин</label>
             <input id="username" type="text" bind:value={username} placeholder="Логин">
+            {#if validated && username.trim().length == 0}
+                <div class="invalid">
+                    Логин не может быть пустым
+                </div>
+            {/if}
         </div>
         <div class="input-block">
             <label for="password">Пароль</label>
             <input id="password" type="password" bind:value={password} placeholder="Пароль">
+            {#if validated && password.trim().length < 8}
+                <div class="invalid">
+                    Пароль должен быть не менее 8 символов
+                </div>
+            {/if}
         </div>
         <button type="submit">Войти</button>
         {#if !isResponseSuccessful}
-            <div class="server-error-block">
+            <div class="invalid server-error-block">
                 Неверный логин или пароль
             </div>
         {/if}
@@ -94,8 +106,12 @@
         cursor: pointer;
     }
 
-    .server-error-block {
+    .invalid {
         color: red;
+        margin-top: 5px;
+    }
+
+    .server-error-block {
         text-align: center;
     }
 
