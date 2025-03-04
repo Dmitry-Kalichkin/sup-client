@@ -1,5 +1,9 @@
 <script lang="ts">
-    let {loadFunction, contentSnippet, currentPage, totalPages} = $props();
+    let {loadFunction, content, currentPage, totalPages} = $props();
+    
+    function getPageNumbers(): number[] {
+        return [...Array(totalPages).keys()].map(n => n + 1);
+    }
 </script>
 
 <div class="container">
@@ -9,20 +13,15 @@
             <div>Загрузка...</div>
         </div>
     {:then data} 
-        {@render contentSnippet(data)}
+        {@render content(data)}
         <ul class="page-numbers">
-            {#each [...Array(totalPages).keys()].map(n => n + 1) as pageNumber}
+            {#each getPageNumbers() as pageNumber}
                 <li>
-                    <button class="page-btn" onclick={() => currentPage = pageNumber}>
+                    <button class="page-btn {$currentPage === pageNumber ? 'active-page' : ''}" onclick={() => $currentPage = pageNumber}>
                         {pageNumber}
                     </button>
                 </li>
             {/each}
-            <li>
-                <button class="page-btn" onclick={() => currentPage = 13}>
-                    13
-                </button>
-            </li>
         </ul>
     {:catch error}
         <p style="color: red">{error.message}</p>
@@ -69,9 +68,11 @@
         border-radius: 5px;
         cursor: pointer;
         margin: 5px;
+        min-width: 30px;
+        min-height: 30px;
     }
 
-    .current-page {
+    .active-page {
         background-color: var(--brand-color);
         color:white;
     }

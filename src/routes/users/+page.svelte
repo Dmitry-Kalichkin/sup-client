@@ -3,15 +3,16 @@
     import { Role } from "$lib/data/user/Role";
     import type { UsersPageEntry, UsersPage } from "$lib/data/user/UsersPage";
     import userService from "$lib/service/UserService";
+    import { writable } from "svelte/store";
 
     let fullName: string | null = $state(null);
     let roles: Role[] | null = $state(null);
-    let pageNumber: number = $state(1);
+    let pageNumber = writable<number>(1);
     let totalPages: number = $state(1);
 
     async function loadUsers(): Promise<UsersPageEntry[]> {
-        const usersPage: UsersPage = await userService.getUsers({fullName: fullName, roles: roles, page: pageNumber});
-        pageNumber = usersPage.page;
+        const usersPage: UsersPage = await userService.getUsers({fullName: fullName, roles: roles, page: $pageNumber});
+        $pageNumber = usersPage.page;
         totalPages = usersPage.totalPages;
         return usersPage.users;
     }
@@ -19,7 +20,7 @@
 
 <div class="container">
     <div>
-        <h1>Пользователи</h1>
+        <h1>Пользователи {$pageNumber}</h1>
         <div class="search-box">
             <div class="input-block">
                 <label for="fullName">ФИО пользователя</label>
@@ -37,16 +38,11 @@
             </div>
         </div>
     </div>
-    <Page loadFunction={loadUsers} contentSnippet={usersTable} currentPage={pageNumber} totalPages={totalPages}/>
+    <Page loadFunction={loadUsers} content={usersTable} currentPage={pageNumber} totalPages={totalPages}/>
 </div>
 
 {#snippet usersTable(users: UsersPageEntry[])}
     <div class="users-container">
-        <div class="user">
-            <div class="user-name">ФИО</div>
-            <div class="user-email">Почта</div>
-            <div class="user-roles">Роли</div>
-        </div>
         {#each users as user}
             <div class="user">
                 <div class="user-name">{user.fullName}</div>
