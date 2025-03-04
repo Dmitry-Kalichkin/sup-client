@@ -1,5 +1,5 @@
 <script lang="ts">
-    let {loadFunction, contentSnippet} = $props();
+    let {loadFunction, contentSnippet, currentPage, totalPages} = $props();
 </script>
 
 <div class="container">
@@ -10,6 +10,20 @@
         </div>
     {:then data} 
         {@render contentSnippet(data)}
+        <ul class="page-numbers">
+            {#each [...Array(totalPages).keys()].map(n => n + 1) as pageNumber}
+                <li>
+                    <button class="page-btn" onclick={() => currentPage = pageNumber}>
+                        {pageNumber}
+                    </button>
+                </li>
+            {/each}
+            <li>
+                <button class="page-btn" onclick={() => currentPage = 13}>
+                    13
+                </button>
+            </li>
+        </ul>
     {:catch error}
         <p style="color: red">{error.message}</p>
     {/await}
@@ -41,5 +55,24 @@
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
+    }
+
+    .page-numbers {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+    }
+
+    .page-btn {
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+    .current-page {
+        background-color: var(--brand-color);
+        color:white;
     }
 </style>

@@ -37,28 +37,24 @@
             </div>
         </div>
     </div>
-    <Page loadFunction={loadUsers} contentSnippet={usersTable} />
+    <Page loadFunction={loadUsers} contentSnippet={usersTable} currentPage={pageNumber} totalPages={totalPages}/>
 </div>
 
 {#snippet usersTable(users: UsersPageEntry[])}
-    <table>
-        <thead>
-            <tr>
-                <th>ФИО</th>
-                <th>Почта</th>
-                <th>Роли</th>
-            </tr>
-        </thead>
-        <tbody>
-            {#each users as user}
-                <tr>
-                    <td>{user.fullName}</td>
-                    <td>{user.email}</td>
-                    <td>{user.roles}</td>
-                </tr>
-            {/each}
-        </tbody>
-    </table>
+    <div class="users-container">
+        <div class="user">
+            <div class="user-name">ФИО</div>
+            <div class="user-email">Почта</div>
+            <div class="user-roles">Роли</div>
+        </div>
+        {#each users as user}
+            <div class="user">
+                <div class="user-name">{user.fullName}</div>
+                <div class="user-email">{user.email}</div>
+                <div class="user-roles">{user.roles.join(', ')}</div>
+            </div>
+        {/each}
+    </div>
 {/snippet}
 
 <style>
@@ -112,11 +108,32 @@
         margin-bottom: 20px;
     }
 
+    .users-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .user {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        margin: 5px;
+        padding: 10px;
+    }
+
+    .user-name {
+        width: 300px;
+    }
+
+    .user-email {
+        width: 150px;
+    }
+
+    .user-roles {
+        width: 100px;
+    }
+
+    .user:hover {
+        cursor: pointer;
+        background-color: var(--brand-color);
+        color: white;
     }
 </style>
