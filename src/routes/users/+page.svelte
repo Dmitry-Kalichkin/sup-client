@@ -20,7 +20,7 @@
 
 <div class="container">
     <div>
-        <h1>Пользователи {$pageNumber}</h1>
+        <h1>Пользователи</h1>
         <div class="search-box">
             <div class="input-block">
                 <label for="fullName">ФИО пользователя</label>
