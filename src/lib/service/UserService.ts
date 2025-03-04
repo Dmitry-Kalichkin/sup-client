@@ -3,6 +3,7 @@ import { UserClient, userClient } from '$lib/client/UserClient';
 import { Role } from '$lib/data/user/Role';
 import type { Credentials } from '$lib/data/user/Credentials';
 import type { User } from '$lib/data/user/User';
+import type { UsersPage, UsersPageParameters } from '$lib/data/user/UsersPage';
 
 class UserService {
     private readonly authContext: AuthContext;
@@ -43,6 +44,10 @@ class UserService {
         this.authContext.removeUsername();
         this.authContext.removeRole();
         window.location.reload();
+    }
+
+    public async getUsers(parameters: UsersPageParameters): Promise<UsersPage> {
+        return await this.userClient.getUsers(parameters);
     }
 }
 
