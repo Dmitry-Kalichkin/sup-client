@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Page from "$lib/components/Page.svelte";
     import { Role } from "$lib/data/user/Role";
     import type { UsersPageEntry, UsersPage } from "$lib/data/user/UsersPage";
     import userService from "$lib/service/UserService";
@@ -36,15 +37,7 @@
             </div>
         </div>
     </div>
-    <div>
-        {#await loadUsers()}
-            <div>Загрузка...</div>
-        {:then users} 
-            {@render usersList(users)}
-        {:catch error}
-            <p style="color: red">{error.message}</p>
-        {/await}
-    </div>
+    <Page loadFunction={loadUsers} contentSnippet={usersList} />
 </div>
 
 {#snippet usersList(users: UsersPageEntry[])}
