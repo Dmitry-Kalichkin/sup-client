@@ -37,17 +37,28 @@
             </div>
         </div>
     </div>
-    <Page loadFunction={loadUsers} contentSnippet={usersList} />
+    <Page loadFunction={loadUsers} contentSnippet={usersTable} />
 </div>
 
-{#snippet usersList(users: UsersPageEntry[])}
-    {#each users as user}
-        <div>
-            {user.fullName}
-            {user.roles}
-            {user.email}
-        </div>
-    {/each}
+{#snippet usersTable(users: UsersPageEntry[])}
+    <table>
+        <thead>
+            <tr>
+                <th>ФИО</th>
+                <th>Почта</th>
+                <th>Роли</th>
+            </tr>
+        </thead>
+        <tbody>
+            {#each users as user}
+                <tr>
+                    <td>{user.fullName}</td>
+                    <td>{user.email}</td>
+                    <td>{user.roles}</td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
 {/snippet}
 
 <style>
@@ -62,6 +73,7 @@
         font-size: 32px;
         margin-top: 30px;
         margin-bottom: 20px;
+        text-align: center;
     }
 
     input {
@@ -74,6 +86,7 @@
         padding: 10px;
         border-color: black;
         width: 170px;
+        height: 40px;
     }
 
     .input-block {
@@ -96,5 +109,14 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .user {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin: 5px;
     }
 </style>
