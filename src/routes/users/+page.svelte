@@ -76,6 +76,7 @@
         padding: 10px;
         border-color: black;
         width: 300px;
+        border-radius: 5px;
     }
 
     select {
@@ -83,6 +84,7 @@
         border-color: black;
         width: 170px;
         height: 40px;
+        border-radius: 5px;
     }
 
     .input-block {
@@ -123,6 +125,7 @@
         justify-content: space-between;
         align-items: center;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
         margin: 10px;
         font-size: 20px;
         padding: 15px;
