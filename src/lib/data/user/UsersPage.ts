@@ -16,5 +16,6 @@ export interface UsersPage {
 export interface UsersPageEntry {
     fullName: string,
     email: string,
+    skips: number,
     roles: Role[]
 }

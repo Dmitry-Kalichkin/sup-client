@@ -1,6 +1,6 @@
 <script lang="ts">
     import Page from "$lib/components/Page.svelte";
-    import { Role } from "$lib/data/user/Role";
+    import { Role, translations } from "$lib/data/user/Role";
     import type { UsersPageEntry, UsersPage } from "$lib/data/user/UsersPage";
     import userService from "$lib/service/UserService";
     import { writable } from "svelte/store";
@@ -30,10 +30,9 @@
                 <label for="role">Роли</label>
                 <select id="role" bind:value={roles} placeholder="Роль" multiple>
                     <option value={null}>Все роли</option>
-                    <option value={Role.ADMIN}>Администратор</option>
-                    <option value={Role.DEANERY}>Деканат</option>
-                    <option value={Role.STUDENT}>Студент</option>
-                    <option value={Role.TEACHER}>Преподаватель</option>
+                    {#each Object.values(Role) as role}
+                        <option value={role}>{translations.get(role)}</option>
+                    {/each}
                 </select>
             </div>
         </div>
@@ -45,9 +44,14 @@
     <div class="users-container">
         {#each users as user}
             <div class="user">
-                <div class="user-name">{user.fullName}</div>
-                <div class="user-email">{user.email}</div>
-                <div class="user-roles">{user.roles.join(', ')}</div>
+                <div>
+                    <div class="user-name">{user.fullName}</div>
+                    <div class="user-email">{user.email}</div>
+                    <div class="user-roles">{user.roles.map(role => translations.get(role)).join(', ')}</div>
+                </div>
+                <div class="skips">
+                    Пропуски: {user.skips}
+                </div>
             </div>
         {/each}
     </div>
@@ -63,7 +67,7 @@
 
     h1 {
         font-size: 32px;
-        margin-top: 30px;
+        margin-top: 10px;
         margin-bottom: 20px;
         text-align: center;
     }
@@ -108,28 +112,44 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 20px;
     }
 
     .user {
+        width: 100%;
         display: flex;
-        padding: 10px;
-    }
-
-    .user-name {
-        width: 300px;
-    }
-
-    .user-email {
-        width: 150px;
-    }
-
-    .user-roles {
-        width: 100px;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 10px;
+        font-size: 20px;
+        padding: 15px;
+        cursor: pointer;
     }
 
     .user:hover {
-        cursor: pointer;
         background-color: var(--brand-color);
         color: white;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .user-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .user-email {
+        opacity: 0.5;
+        font-size: 16px;
+    }
+
+    .user-roles {
+        font-size: 16px;
+    }
+
+    .skips {
+        font-size: 17px;
     }
 </style>

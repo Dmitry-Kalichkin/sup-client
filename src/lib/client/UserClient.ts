@@ -33,11 +33,11 @@ export class UserClient {
             totalPages: 5,
             currenctSize: 4,
             users: [
-                {fullName: "Админ Админович Админов", email: "admin@mail.com", roles: [Role.ADMIN]},
-                {fullName: "Студент Студентович Студентов", email: "student@mail.com", roles: [Role.STUDENT]},
-                {fullName: "Декан Деканович Деканов", email: "deanery@mailc.om", roles: [Role.DEANERY]},
-                {fullName: "Преподаватель Преподавателивич Преподавалов", email: "teacher@mail.com", roles: [Role.TEACHER]},
-                {fullName: "Тест Тестович Тестов", email: "test@mail.com", roles: [Role.ADMIN, Role.TEACHER]}
+                {fullName: "Админ Админович Админов", email: "admin@mail.com", roles: [Role.ADMIN], skips: 200},
+                {fullName: "Студент Студентович Студентов", email: "student@mail.com", roles: [Role.STUDENT], skips: 0},
+                {fullName: "Декан Деканович Деканов", email: "deanery@mailc.om", roles: [Role.DEANERY], skips: 47},
+                {fullName: "Преподаватель Преподавателивич Преподавалов", email: "teacher@mail.com", roles: [Role.TEACHER], skips: 7},
+                {fullName: "Тест Тестович Тестов", email: "test@mail.com", roles: [Role.ADMIN, Role.TEACHER], skips: 0}
             ]
         };
     }
