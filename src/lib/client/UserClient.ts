@@ -1,6 +1,7 @@
 import type { Credentials } from '$lib/data/user/Credentials';
 import { Role } from '$lib/data/user/Role';
 import type { User } from '$lib/data/user/User';
+import type { UsersPage, UsersPageParameters } from '$lib/data/user/UsersPage';
 
 export class UserClient {
     private readonly url: string;
@@ -23,6 +24,22 @@ export class UserClient {
             throw new Error('Wrong credentials');
         }
         return user;
+    }
+
+    public async getUsers(parameters: UsersPageParameters): Promise<UsersPage> {
+        await new Promise(res => setTimeout(res, 1000));
+        return {
+            page: parameters.page,
+            totalPages: 5,
+            currenctSize: 4,
+            users: [
+                {fullName: "Админ Админович Админов", email: "admin@mail.com", roles: [Role.ADMIN], skips: 200},
+                {fullName: "Студент Студентович Студентов", email: "student@mail.com", roles: [Role.STUDENT], skips: 0},
+                {fullName: "Декан Деканович Деканов", email: "deanery@mailc.om", roles: [Role.DEANERY], skips: 47},
+                {fullName: "Преподаватель Преподавателивич Преподавалов", email: "teacher@mail.com", roles: [Role.TEACHER], skips: 7},
+                {fullName: "Тест Тестович Тестов", email: "test@mail.com", roles: [Role.ADMIN, Role.TEACHER], skips: 0}
+            ]
+        };
     }
 }
 

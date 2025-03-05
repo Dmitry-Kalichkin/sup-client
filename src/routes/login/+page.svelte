@@ -80,6 +80,7 @@
         padding: 10px;
         border-color: black;
         width: 300px;
+        border-radius: 5px;
     }
 
     input:focus {
@@ -100,9 +101,10 @@
     button {
         padding: 10px;
         border: 0px;
+        border-radius: 5px;
         border-color: var(--brand-color);
         background-color: var(--brand-color);
-        color: white;
+        color: #ffffff;
         cursor: pointer;
     }
 
