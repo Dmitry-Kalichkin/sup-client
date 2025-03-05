@@ -35,6 +35,17 @@
                     {/each}
                 </select>
             </div>
+            <div class="buttons-group">
+                <button>Найти</button>
+                {#if userService.isManager()}
+                    <button>
+                        <img src="/images/plus-icon.svg" alt="Добавить пользователя" />
+                    </button>
+                    <button>
+                        <img src="/images/csv-icon.svg" alt="Добавить пользователей" />
+                    </button>    
+                {/if}
+            </div>
         </div>
     </div>
     <Page loadFunction={loadUsers} content={usersTable} currentPage={pageNumber} totalPages={totalPages}/>
@@ -106,7 +117,7 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
+        align-items: end;
         margin-bottom: 20px;
     }
 
@@ -154,5 +165,26 @@
 
     .skips {
         font-size: 17px;
+    }
+
+    .buttons-group {
+        display: flex;
+        gap: 5px;
+    }
+
+    button {
+        padding: 10px;
+        border: 0px;
+        border-radius: 5px;
+        border-color: var(--brand-color);
+        background-color: var(--brand-color);
+        color: #ffffff;
+        cursor: pointer;
+        margin-bottom: 5px;
+    }
+
+    img {
+        height: 16px;
+        width: 16px;
     }
 </style>
