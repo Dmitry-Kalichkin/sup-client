@@ -32,8 +32,6 @@
     .container {
         display: flex;
         flex-direction: column;
-        height: 100%;
-        width: fit-content;
     }
 
     .load-container {
@@ -68,7 +66,7 @@
         border-radius: 5px;
         cursor: pointer;
         margin: 5px;
-        margin-bottom: 0;
+        margin-bottom: 20px;
         min-width: 30px;
         min-height: 30px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

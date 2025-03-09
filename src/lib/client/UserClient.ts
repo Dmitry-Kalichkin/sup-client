@@ -4,10 +4,10 @@ import type { User } from '$lib/data/user/User';
 import type { UsersPage, UsersPageParameters } from '$lib/data/user/UsersPage';
 
 export class UserClient {
-    private readonly url: string;
+    private readonly baseUrl: string;
 
-    constructor(url: string) {
-        this.url = url;
+    constructor(baseUrl: string) {
+        this.baseUrl = baseUrl;
     }
 
     public login(credentials: Credentials): string {
@@ -43,7 +43,7 @@ export class UserClient {
     }
 }
 
-export const userClient = new UserClient('http://localhost');
+export const userClient = new UserClient('http://localhost/users');
 
 const stubUsers = new Map<string, User>([
     ["admin", { username: 'admin', email: 'admin@mail.com', role: Role.ADMIN }],
