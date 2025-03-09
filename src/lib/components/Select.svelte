@@ -6,7 +6,7 @@
 <div class="input-block">
     <label for={name}>{label}</label>
     <select id={name} name={name} style="width: {width}">
-        <option value={null}>-</option>
+        <option value={null}>Все</option>
         {#each Object.values(optionsEnum) as opt}
             <option value={opt}>{opt}</option>
         {/each}
