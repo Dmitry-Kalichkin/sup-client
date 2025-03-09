@@ -24,7 +24,7 @@
                         {skip.reason}, {parseDate(skip.startDate)} - {parseDate(skip.endDate)}
                     </div>
                 </div>
-                <div class="skip-status" style="color: {StatusColors.get(skip.status)}">{skip.status}</div>
+                <div style="color: {StatusColors.get(skip.status)}">{skip.status}</div>
             </div>
         {/each}
     </div>
@@ -44,6 +44,7 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         border-radius: 5px;
         padding: 15px;
+        margin-bottom: 10px;
         cursor: pointer;
     }
 
