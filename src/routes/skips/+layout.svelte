@@ -48,7 +48,6 @@
         display: flex;
         flex-direction: column;
         padding: 10px;
-        border-right: black 1px solid;
     }
 
     .group-filters {
@@ -68,9 +67,12 @@
     }
 
     .skips-list {
+        height: fit-content;
+        min-height: calc(100% - 15px);
         display: flex;
         flex-direction: column;
         width: 100%;
         padding: 10px;
+        border-left: black 1px solid;
     }
 </style>

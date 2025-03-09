@@ -1,5 +1,5 @@
 <script lang="ts">
-    let {loadFunction, content, currentPage, totalPages} = $props();
+    let {loadFunction, content, currentPage, totalPages, pagesLocation = "center"} = $props();
     
     function getPageNumbers(): number[] {
         return [...Array(totalPages).keys()].map(n => n + 1);
@@ -14,7 +14,7 @@
         </div>
     {:then data} 
         {@render content(data)}
-        <ul class="page-numbers">
+        <ul class="page-numbers" style="justify-content: {pagesLocation}">
             {#each getPageNumbers() as pageNumber}
                 <li>
                     <button class="page-btn {$currentPage === pageNumber ? 'active-page' : ''}" onclick={() => $currentPage = pageNumber}>
@@ -56,7 +56,6 @@
 
     .page-numbers {
         display: flex;
-        justify-content: center;
         list-style: none;
     }
 
