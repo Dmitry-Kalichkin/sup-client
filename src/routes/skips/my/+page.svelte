@@ -1,57 +1,25 @@
 <script lang="ts">
+    import Input from "$lib/components/Input.svelte";
+    import Select from "$lib/components/Select.svelte";
     import { Reason } from "$lib/data/skips/Reason";
     import { Status } from "$lib/data/skips/Status";
 
-    let fullName: string | null = null;
-    let status: Status | null = null;
-    let reason: Reason | null = null;
-    let startTime: Date | null = null;
-    let endTime: Date | null = null;
-
-    function applyFilters() {
-        console.log(fullName, status, reason, startTime, endTime);
-    }
 </script>
 
 <div class="container">
-    <div class="search-box">
+    <form class="search-box">
         <h2>Фильтры</h2>
-        <div class="input-block">
-            <label for="fullName">ФИО пользователя</label>
-            <input id="fullName" type="text" bind:value={fullName} placeholder="ФИО">
+        <Input label="ФИО пользователя" name="fullName" type="text" width="290px" />
+        <div class="group-filters">
+            <Select label="Статус" name="status" optionsEnum={Status} width="150px" />
+            <Select label="Причина" name="reason" optionsEnum={Reason} width="150px" />
         </div>
         <div class="group-filters">
-            <div class="input-block">
-                <label for="status">Статус</label>
-                <select id="status" bind:value={status} placeholder="Статус" class="select-grouped">
-                    <option value={null}>Не выбран</option>
-                    {#each Object.values(Status) as status}
-                        <option value={status}>{status}</option>
-                    {/each}
-                </select>
-            </div>
-            <div class="input-block">
-                <label for="reason">Причина</label>
-                <select id="reason" bind:value={reason} placeholder="Причина" class="select-grouped">
-                    <option value={null}>Не выбрана</option>
-                    {#each Object.values(Reason) as reason}
-                        <option value={reason}>{reason}</option>
-                    {/each}
-                </select>
-            </div>
+            <Input label="Пропуск с" name="startTime" type="date" width="125px" />
+            <Input label="Пропуск до" name="endTime" type="date" width="125px" />
         </div>
-        <div class="group-filters">
-            <div class="input-block">
-                <label for="startTime">Пропуск с</label>
-                <input id="startTime" class="input-date" type="date" bind:value={startTime} placeholder="">
-            </div>
-            <div class="input-block">
-                <label for="startTime">Пропуск до</label>
-                <input id="startTime" class="input-date" type="date" bind:value={endTime} placeholder="">
-            </div>
-        </div>
-        <button onclick={applyFilters}>Найти</button>
-    </div>
+        <button type="submit">Найти</button>
+    </form>
     <div class="skips-list">
         <h1>Мои пропуски</h1>
     </div>
@@ -81,37 +49,6 @@
         flex-direction: column;
         padding: 10px;
         border-right: black 1px solid;
-    }
-
-    input, select {
-        padding: 10px;
-        border-color: black;
-        border-radius: 5px;
-        width: 290px;
-    }
-
-    .input-block {
-        display: flex;
-        flex-direction: column;
-        margin: 5px;
-    }
-
-    .input-date {
-        width: 125px;
-    }
-
-    .select-grouped {
-        width: 150px;
-        border: black 2px solid;
-    }
-
-    input:focus {
-        outline-color: var(--brand-color);
-        border-color: var(--brand-color);
-    }
-
-    label {
-        margin-bottom: 5px;
     }
 
     .group-filters {
