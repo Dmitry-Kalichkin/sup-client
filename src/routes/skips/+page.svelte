@@ -6,20 +6,20 @@
     import { parseDate } from "$lib/utils/DateUtils";
     import { StatusColors } from "$lib/data/skips/Status";
 
-    async function loadMySkips(): Promise<SkipsPage> {
+    async function loadSkips(): Promise<SkipsPage> {
         return await skipsService.getSkips({page: 1, status: null, reason: null, startDate: null, endDate: null, fullName: null});
     }
 </script>
 
 <h1>Пропуски</h1>
-<Page loadFunction={loadMySkips} content={skip} currentPage={writable(1)} totalPages={10}/>
+<Page loadFunction={loadSkips} content={skipsList} currentPage={writable(1)} totalPages={10}/>
 
-{#snippet skip(entry: SkipsPage) }
+{#snippet skipsList(entry: SkipsPage) }
     <div>
         {#each entry.skips as skip, i}
             <div class="skip">
                 <div class="">
-                    <div class="skip-id">Пропуск №{i}</div>
+                    <div class="skip-id">Пропуск №{skip.id}</div>
                     <div class="skip-user">{skip.fullName}</div>
                     <div>
                         {skip.reason}, {parseDate(skip.startDate)} - {parseDate(skip.endDate)}

@@ -12,14 +12,14 @@
 </script>
 
 <h1>Мои пропуски</h1>
-<Page loadFunction={loadMySkips} content={skip} currentPage={writable(1)} totalPages={10}/>
+<Page loadFunction={loadMySkips} content={skipsList} currentPage={writable(1)} totalPages={10}/>
 
-{#snippet skip(entry: SkipsPage) }
+{#snippet skipsList(entry: SkipsPage) }
     <div>
-        {#each entry.skips as skip, i}
+        {#each entry.skips as skip}
             <div class="skip">
                 <div class="">
-                    <div class="skip-id">Пропуск №{i}</div>
+                    <div class="skip-id">Пропуск №{skip.id}</div>
                     <div>
                         {skip.reason}, {parseDate(skip.startDate)} - {parseDate(skip.endDate)}
                     </div>
