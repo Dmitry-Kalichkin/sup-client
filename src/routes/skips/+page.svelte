@@ -14,13 +14,16 @@
 <h1>Пропуски</h1>
 <Page loadFunction={loadSkips} content={skipsList} currentPage={writable(1)} totalPages={10}/>
 
-{#snippet skipsList(entry: SkipsPage) }
+{#snippet skipsList(skipsPage: SkipsPage)}
     <div class="skips-container">
-        {#each entry.skips as skip, i}
+        {#each skipsPage.skips as skip}
             <div class="skip">
                 <div class="">
                     <div class="skip-id">Пропуск №{skip.id}</div>
-                    <div class="skip-user">{skip.fullName}</div>
+                    <div class="skip-title">
+                        <p class="skip-user">{skip.fullName}</p>
+                        <p class="skip-user-group">{skip.group}</p>
+                    </div>
                     <div>
                         {skip.reason}, {parseDate(skip.startDate)} - {parseDate(skip.endDate)}
                     </div>
@@ -63,9 +66,19 @@
         opacity: 0.5;
     }
 
+    .skip-title {
+        display: flex;
+        gap: 2px;
+    }
+
     .skip-user {
         font-weight: bold;
         font-size: 18px;
         margin-bottom: 5px;
+    }
+
+    .skip-user-group {
+        font-size: 12px;
+        opacity: 0.7;
     }
 </style>

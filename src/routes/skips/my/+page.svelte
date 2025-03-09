@@ -1,12 +1,12 @@
 <script lang="ts">
     import { skipsService } from "$lib/service/SkipsService";
     import  Page  from "$lib/components/Page.svelte";
-    import type { SkipsPage } from "$lib/data/skips/Skips";
+    import type { MySkipsPage } from "$lib/data/skips/Skips";
     import { writable } from "svelte/store";
     import { parseDate } from "$lib/utils/DateUtils";
     import { StatusColors } from "$lib/data/skips/Status";
 
-    async function loadMySkips(): Promise<SkipsPage> {
+    async function loadMySkips(): Promise<MySkipsPage> {
         return await skipsService.getMySkips({page: 1, status: null, reason: null, startDate: null, endDate: null});
     }
 </script>
@@ -14,9 +14,9 @@
 <h1>Мои пропуски</h1>
 <Page loadFunction={loadMySkips} content={skipsList} currentPage={writable(1)} totalPages={10}/>
 
-{#snippet skipsList(entry: SkipsPage) }
+{#snippet skipsList(skipsPage: MySkipsPage) }
     <div class="skips-container">
-        {#each entry.skips as skip}
+        {#each skipsPage.skips as skip}
             <div class="skip">
                 <div class="">
                     <div class="skip-id">Пропуск №{skip.id}</div>
