@@ -12,7 +12,7 @@
 </script>
 
 <h1>Мои пропуски</h1>
-<Page loadFunction={loadMySkips} content={skipsList} currentPage={writable(1)} totalPages={10}/>
+<Page loadFunction={loadMySkips} content={skipsList} currentPage={writable(1)} totalPages={10} pagesLocation="start"/>
 
 {#snippet skipsList(skipsPage: MySkipsPage) }
     <div class="skips-container">
