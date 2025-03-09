@@ -15,7 +15,7 @@
 <Page loadFunction={loadSkips} content={skipsList} currentPage={writable(1)} totalPages={10}/>
 
 {#snippet skipsList(entry: SkipsPage) }
-    <div>
+    <div class="skips-container">
         {#each entry.skips as skip, i}
             <div class="skip">
                 <div class="">
@@ -32,12 +32,16 @@
 {/snippet}
 
 <style>
-        h1 {
+    h1 {
         font-size: 32px;
         margin-top: 10px;
         margin-bottom: 20px;
     }
 
+    .skips-container {
+        margin-bottom: 10px;
+    }
+    
     .skip {
         display: flex;
         justify-content: space-between;
@@ -45,7 +49,7 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         border-radius: 5px;
         padding: 15px;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         cursor: pointer;
     }
 
