@@ -4,6 +4,7 @@
     import type { SkipsPage } from "$lib/data/skips/Skips";
     import { writable } from "svelte/store";
     import { parseDate } from "$lib/utils/DateUtils";
+    import { StatusColors } from "$lib/data/skips/Status";
 
     async function loadMySkips(): Promise<SkipsPage> {
         return await skipsService.getMySkips({page: 1, status: null, reason: null, startDate: null, endDate: null});
@@ -23,7 +24,7 @@
                         {skip.reason}, {parseDate(skip.startDate)} - {parseDate(skip.endDate)}
                     </div>
                 </div>
-                <div class="skip-status">{skip.status}</div>
+                <div class="skip-status" style="color: {StatusColors.get(skip.status)}">{skip.status}</div>
             </div>
         {/each}
     </div>
