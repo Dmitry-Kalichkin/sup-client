@@ -4,17 +4,39 @@
     import type { UsersPageEntry, UsersPage } from "$lib/data/user/UsersPage";
     import userService from "$lib/service/UserService";
     import { writable } from "svelte/store";
+    import Modal from "$lib/components/Modal.svelte";
+    import Input from "$lib/components/Input.svelte";
 
+    let showCreateUserModal = $state(false);
+    let showCreateUsersBatchModal = $state(false);
+    let showEditUserModal = $state(false);
     let fullName: string | null = $state(null);
     let roles: Role[] | null = $state(null);
     let pageNumber = writable<number>(1);
     let totalPages: number = $state(1);
+    let editUser = $state<UsersPageEntry | null>(null);
 
     async function loadUsers(): Promise<UsersPageEntry[]> {
         const usersPage: UsersPage = await userService.getUsers({fullName: fullName, roles: roles, page: $pageNumber});
         $pageNumber = usersPage.page;
         totalPages = usersPage.totalPages;
         return usersPage.users;
+    }
+
+    function onUserClick(user: UsersPageEntry) {
+        showEditUserModal = true;
+        editUser = user;
+    }
+
+    function changeRoles(role: Role) {
+        if (!editUser) {
+            return;
+        }
+        if (editUser.roles.length > 1 && editUser?.roles.includes(role)) {
+            editUser.roles = editUser.roles.filter(r => r !== role);
+        } else if (!editUser?.roles.includes(role)) {
+            editUser.roles = [...editUser.roles, role];
+        }
     }
 </script>
 
@@ -38,23 +60,64 @@
             <div class="buttons-group">
                 <button>Найти</button>
                 {#if userService.isManager()}
-                    <button>
+                    <button onclick={() => (showCreateUserModal = true)}>
                         <img src="/images/plus-icon.svg" alt="Добавить пользователя" />
                     </button>
-                    <button>
+                    <button onclick={() => (showCreateUsersBatchModal = true)}>
                         <img src="/images/csv-icon.svg" alt="Добавить пользователей" />
                     </button>    
                 {/if}
             </div>
         </div>
     </div>
-    <Page loadFunction={loadUsers} content={usersTable} currentPage={pageNumber} totalPages={totalPages}/>
+    <Page loadFunction={loadUsers} content={usersList} currentPage={pageNumber} totalPages={totalPages}/>
 </div>
 
-{#snippet usersTable(users: UsersPageEntry[])}
+<Modal bind:showModal={showCreateUserModal}>
+    {#snippet header()}
+        <h2>
+            Создать пользователя
+        </h2>
+    {/snippet}
+
+    <Input label="ФИО" name="fullName" type="text" width="250px" />
+    <Input label="Email" name="email" type="email" width="250px" />
+    <Input label="Пароль" name="password" type="password" width="250px" />
+</Modal>
+
+<Modal bind:showModal={showCreateUsersBatchModal}>
+    {#snippet header()}
+        <h2>
+            Создать пользователей
+        </h2>
+    {/snippet}
+    <label for="myfile" class="label">Выберите файлы</label>
+    <input type="file" class="my" id="myfile" name="myfile" multiple>
+</Modal>
+
+{#if editUser}
+    <Modal bind:showModal={showEditUserModal}>
+        {#snippet header()}
+            <h2>
+                {editUser?.fullName}
+            </h2>
+            <div class="title-email">{editUser?.email}</div>
+        {/snippet}
+        <div class="roles-container">
+            {#each Object.values(Role) as role}
+                <button class="{editUser?.roles.includes(role) ? '' : 'disabled'}" onclick={() => changeRoles(role)}>{translations.get(role)}</button>
+            {/each}
+        </div>
+        {#if editUser?.roles.includes(Role.STUDENT)}
+            <Input inline label="Группа:" name="group" type="text" width="250px" />
+        {/if}
+    </Modal>
+{/if}
+
+{#snippet usersList(users: UsersPageEntry[])}
     <div class="users-container">
         {#each users as user}
-            <div class="user">
+            <div class="user" onclick={() => onUserClick(user)}>
                 <div>
                     <div class="user-name">{user.fullName}</div>
                     <div class="user-email">{user.email}</div>
@@ -80,6 +143,13 @@
         font-size: 32px;
         margin-top: 10px;
         margin-bottom: 20px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 20px;
+        margin-top: 5px;
+        margin-bottom: 10px;
         text-align: center;
     }
 
@@ -186,5 +256,24 @@
     img {
         height: 16px;
         width: 16px;
+    }
+
+    .roles-container {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+    .title-email {
+        opacity: 0.5;
+        font-size: 18px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .disabled {
+        background-color: #ffffff;
+        color: black;
     }
 </style>
