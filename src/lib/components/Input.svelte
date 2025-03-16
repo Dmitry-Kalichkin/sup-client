@@ -1,9 +1,9 @@
 <script lang="ts">
-    let {label, name, type, width} = $props();
+    let {label, name, type, width, inline = false} = $props();
 
 </script>
 
-<div class="input-block">
+<div class="input-block {inline ? 'inline' : ''}">
     <label for={name}>{label}</label>
     <input id={name} name={name} style="width: {width}" type={type} placeholder="">
 </div>
@@ -30,5 +30,12 @@
     label {
         margin-left: 5px;
         margin-bottom: 5px;
+    }
+
+    .inline {
+        flex-direction: row !important;
+        align-items: center;
+        gap: 5px;
+        justify-content: center;
     }
 </style>

@@ -14,8 +14,10 @@ export interface UsersPage {
 }
 
 export interface UsersPageEntry {
+    id: number,
     fullName: string,
     email: string,
     skips: number,
+    group: string,
     roles: Role[]
 }
