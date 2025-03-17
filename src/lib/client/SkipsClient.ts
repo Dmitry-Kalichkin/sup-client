@@ -49,10 +49,10 @@ export class SkipsClient {
             currenctSize: 4,
             skips: [
                 {id: 1, status: Status.PENDING, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: []},
-                {id: 1, status: Status.PENDING, reason: Reason.OTHER, startDate: new Date(), endDate: new Date(), files: ["files/file1.txt", "files/file2.txt"]},
+                {id: 1, status: Status.PENDING, reason: Reason.OTHER, startDate: new Date(), endDate: new Date(), files: ["files/file1.txt", "files/file2.txt", "files/file2.txt", "files/file2.txt"]},
                 {id: 2, status: Status.APPROVED, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: ["files/file1.txt"]},
-                {id: 3, status: Status.REJECTED, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: ["files/file1.txt", "files/file2.txt"]},
-                {id: 4, status: Status.APPROVED, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: ["files/file1.txt"]},
+                {id: 3, status: Status.REJECTED, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: ["files/file1.txt", "files/file2.txt", "files/file2.txt"]},
+                {id: 4, status: Status.APPROVED, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: ["files/file1.txt", "files/file2.txt"]},
                 {id: 5, status: Status.REJECTED, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: ["files/file2.txt"]},
             ]
         };

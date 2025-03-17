@@ -7,6 +7,7 @@
     import { StatusColors } from "$lib/data/skips/Status";
     import Modal from "$lib/components/Modal.svelte";
     import LightInput from "$lib/components/LightInput.svelte";
+    import FilesList from "$lib/components/FilesList.svelte";
 
     let showSkipModal = $state(false);
     let selectedSkip = $state<MySkipsPageEntry | null>(null);
@@ -56,6 +57,7 @@
     <LightInput title="Причина:" name="reason" value={selectedSkip?.reason} readonly />
     <LightInput title="Дата начала:" name="startDate" type="date" value={selectedSkip?.startDate} readonly />
     <LightInput title="Действует до:" name="endDate" type="date" value={selectedSkip?.endDate} />
+    <FilesList files={selectedSkip?.files} onRemove={() => {}} onAdd={() => {}} />
 </Modal>
 
 <style>
