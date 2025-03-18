@@ -8,8 +8,8 @@
     let { showModal=$bindable() } = $props();
 
     let reason = $state(Reason.ILL);
-    let startDate = $state(new Date());
-    let endDate = $state(new Date());
+    let startDate = $state<string | null>(null);
+    let endDate = $state<string | null>(null);
     let files = $state<any[]>([]);
 
     function onsubmit(e: SubmitEvent) {

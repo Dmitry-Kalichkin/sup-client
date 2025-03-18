@@ -1,20 +1,25 @@
 <script lang="ts">
     import { StatusColors } from "$lib/data/skips/Status";
+    import { parseFormDate } from "$lib/utils/DateUtils";
     import FilesList from "./FilesList.svelte";
     import LightInput from "./LightInput.svelte";
     import Modal from "./Modal.svelte";
 
     let { showModal=$bindable(), selectedSkip } = $props();
 
-    let endDate = $state(new Date());
+    let endDate = $state(parseFormDate(selectedSkip.endDate));
     let files = $state<any[]>([]);
+
+    function onsubmit(e: SubmitEvent) {
+        console.log(endDate, files);
+    }
 </script>
 
-<Modal bind:showModal={showModal}>
+<Modal bind:showModal={showModal} {onsubmit}>
     {#snippet header()}
         <div class="modal-header">
             <h2>
-                Пропуск №{selectedSkip?.id}
+                Пропуск №{selectedSkip.id}
             </h2>
             {#if selectedSkip?.status}
                 <div style="color: {StatusColors.get(selectedSkip.status)}">
@@ -23,12 +28,10 @@
             {/if}
         </div>
     {/snippet}
-    <form>
-        <LightInput title="Причина:" name="reason" value={selectedSkip?.reason} readonly />
-        <LightInput title="Дата начала:" name="startDate" type="date" value={selectedSkip?.startDate} readonly />
-        <LightInput title="Действует до:" name="endDate" type="date" value={selectedSkip?.endDate} />
-        <FilesList files={selectedSkip?.files} onAdd={() => {}} />
-    </form>
+    <LightInput title="Причина:" name="reason" value={selectedSkip.reason} readonly />
+    <LightInput title="Дата начала:" name="startDate" type="date" value={parseFormDate(selectedSkip.startDate)} readonly />
+    <LightInput title="Действует до:" name="endDate" type="date" bind:value={endDate} />
+    <FilesList files={selectedSkip.files} onAdd={() => {}} />
 </Modal>
 
 <style>

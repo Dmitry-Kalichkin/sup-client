@@ -30,7 +30,9 @@
 </div>
 <Page loadFunction={loadMySkips} content={skipsList} currentPage={writable(1)} totalPages={10} pagesLocation="start"/>
 <CreateSkipModal bind:showModal={showCreateSkipModal} />
-<ExtendSkipModal bind:showModal={showExtendSkipModal} {selectedSkip} />
+{#if selectedSkip}
+    <ExtendSkipModal bind:showModal={showExtendSkipModal} {selectedSkip} />
+{/if}
 
 {#snippet skipsList(skipsPage: MySkipsPage) }
     <div class="skips-container">

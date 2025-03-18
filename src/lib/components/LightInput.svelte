@@ -4,7 +4,7 @@
 
 <div class="container" style="width: {width}">
     <label for={name}>{title}</label>
-    <input {name} {type} {value} {readonly} class={readonly ? 'inactive' : ''} {multiple}>
+    <input {name} {type} bind:value={value} {readonly} class={readonly ? 'inactive' : ''} {multiple}>
 </div>
 
 <style>

@@ -3,6 +3,11 @@ export function parseDate(date: Date): string {
     return date.getDate() + " " + monthName + " " + date.getFullYear();
 }
 
+export function parseFormDate(date: Date): string {
+    const month = date.getMonth() + 1;
+    return date.getFullYear() + "-" + (month < 10 ? "0" + month : month) + "-" + (date.getDate() < 10 ? "0" + date.getDate() : date.getDate());
+}
+
 export const MonthsNameForDate = new Map<number, string>([
     [1, "Января"],
     [2, "Февраля"],
