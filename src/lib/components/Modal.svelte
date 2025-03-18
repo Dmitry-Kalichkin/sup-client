@@ -1,7 +1,7 @@
 <script>
     import { on } from "svelte/events";
 
-	let { showModal = $bindable(), onsubmit, header, children, onClose=null } = $props();
+	let { showModal = $bindable(), onsubmit=null, header, children, onClose=null } = $props();
 
 	let dialog = $state();
 
@@ -21,7 +21,9 @@
             {@render header?.()}
             {@render children?.()}
             <!-- svelte-ignore a11y_autofocus -->
-            <button autofocus type="submit">Создать</button>
+			{#if onsubmit}
+			 	<button autofocus type="submit">Создать</button>
+			{/if}
 		</form>
     </dialog>
 </div>
