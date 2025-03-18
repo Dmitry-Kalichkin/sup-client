@@ -1,5 +1,7 @@
 <script>
-	let { showModal = $bindable(), onsubmit, header, children } = $props();
+    import { on } from "svelte/events";
+
+	let { showModal = $bindable(), onsubmit, header, children, onClose=null } = $props();
 
 	let dialog = $state();
 
@@ -12,7 +14,7 @@
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
     <dialog
         bind:this={dialog}
-        onclose={() => (showModal = false)}
+        onclose={() => {showModal = false; onClose?.()}}
         onclick={(e) => { if (e.target === dialog) dialog.close(); }}
     >
         <form class="modal" {onsubmit}>

@@ -15,9 +15,16 @@
     function onsubmit(e: SubmitEvent) {
         console.log(reason, startDate, endDate, files);
     }
+
+    function onClose() {
+        reason = Reason.ILL;
+        startDate = null;
+        endDate = null;
+        files = [];
+    }
 </script>
 
-<Modal bind:showModal={showModal} {onsubmit}>
+<Modal bind:showModal={showModal} {onsubmit} {onClose}>
     {#snippet header()}
         <div class="modal-header">
             <h2>

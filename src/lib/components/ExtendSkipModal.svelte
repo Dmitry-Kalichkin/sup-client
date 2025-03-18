@@ -6,13 +6,17 @@
     import Modal from "./Modal.svelte";
 
     let { showModal=$bindable(), selectedSkip } = $props();
-
-    let endDate = $state(parseFormDate(selectedSkip.endDate));
+    let endDate = $state< string | null>(parseFormDate(selectedSkip.endDate));
     let files = $state<any[]>([]);
 
     function onsubmit(e: SubmitEvent) {
         console.log(endDate, files);
     }
+
+    $effect(() => {
+        endDate = parseFormDate(selectedSkip.endDate);
+        return () => {endDate = null};
+    });
 </script>
 
 <Modal bind:showModal={showModal} {onsubmit}>
