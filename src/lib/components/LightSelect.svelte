@@ -1,10 +1,15 @@
 <script lang="ts">
-    let {name, type="text", value=$bindable(), title, readonly=false, multiple=false, width="300px"} = $props();
+    let {label, name, optionsEnum, width="300px"} = $props();
+
 </script>
 
 <div class="container" style="width: {width}">
-    <label for={name}>{title}</label>
-    <input {name} {type} {value} {readonly} class={readonly ? 'inactive' : ''} {multiple}>
+    <label for={name}>{label}</label>
+    <select id={name} name={name}>
+        {#each Object.values(optionsEnum) as opt}
+            <option value={opt}>{opt}</option>
+        {/each}
+    </select>
 </div>
 
 <style>
@@ -21,18 +26,14 @@
         font-size: 16px;
     }
 
-    input {
+    select {
         width: 100%;
         padding: 10px;
+        padding-right: 25px;
         outline: 0;
         border-radius: 5px;
         border: 1px;
         border-style: solid;
         border-color: gray;
-    }
-
-    .inactive {
-        cursor: default;
-        color: gray;
     }
 </style>

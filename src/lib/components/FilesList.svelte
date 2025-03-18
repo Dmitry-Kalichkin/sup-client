@@ -1,20 +1,25 @@
 <script lang="ts">
-    let { files, onRemove, onAdd } = $props();
+    let { files=$bindable([]), canRemoeve=() => false, onRemove=null, onAdd=null } = $props();
 
+    let newFiles = $state<any[]>([]);
 </script>
 
 <div class="files-list">
     {#each files as file}
-        <div class="file">
+        <div class="file {canRemoeve(file) ? '' : 'not-removable'}">
             <a href={file} download>{file}</a>
-            <button onclick={() => onRemove(file)}>
-                <img src="/images/trash.svg" alt="Удалить">
-            </button>
+            {#if canRemoeve(file)}
+                <button onclick={() => onRemove(file)}>
+                    <img src="/images/trash.svg" alt="Удалить">
+                </button>
+            {/if}
         </div>
     {/each}
-    <button class="add-btn" onclick={() => onAdd()}>
-        Добваить документы
-    </button>
+    {#if onAdd}
+        <button class="add-btn" onclick={() => onAdd()}>
+            Добваить документы
+        </button>
+    {/if}
 </div>
 
 <style>
@@ -59,5 +64,10 @@
         border-radius: 5px;
         color: var(--brand-color);
         border: 1px dotted var(--brand-color);
+    }
+
+    .not-removable {
+        text-align: center;
+        justify-content: center !important;
     }
 </style>

@@ -1,29 +1,36 @@
 <script lang="ts">
     import { skipsService } from "$lib/service/SkipsService";
     import  Page  from "$lib/components/Page.svelte";
-    import type { MySkipsPage, MySkipsPageEntry } from "$lib/data/skips/Skips";
+    import type { MySkipsPage, MySkipsPageEntry, Skip, SkipExtension } from "$lib/data/skips/Skips";
     import { writable } from "svelte/store";
     import { parseDate } from "$lib/utils/DateUtils";
     import { StatusColors } from "$lib/data/skips/Status";
-    import Modal from "$lib/components/Modal.svelte";
-    import LightInput from "$lib/components/LightInput.svelte";
-    import FilesList from "$lib/components/FilesList.svelte";
+    import ExtendSkipModal from "$lib/components/ExtendSkipModal.svelte";
+    import CreateSkipModal from "$lib/components/CreateSkipModal.svelte";
 
-    let showSkipModal = $state(false);
+    let showExtendSkipModal = $state(false);
+    let showCreateSkipModal = $state(false);
     let selectedSkip = $state<MySkipsPageEntry | null>(null);
-
-    function pickSkip(skip: MySkipsPageEntry) {
-        selectedSkip = skip;
-        showSkipModal = true;
-    }
 
     async function loadMySkips(): Promise<MySkipsPage> {
         return await skipsService.getMySkips({page: 1, status: null, reason: null, startDate: null, endDate: null});
     }
+
+    function pickSkip(skip: MySkipsPageEntry) {
+        selectedSkip = skip;
+        showExtendSkipModal = true;
+    }
 </script>
 
-<h1>Мои пропуски</h1>
+<div class="title-container">
+    <h1>Мои пропуски</h1>
+    <button onclick={() => showCreateSkipModal = true}>
+        <img src="/images/plus-icon.svg" alt="Добавить пропуск">
+    </button>
+</div>
 <Page loadFunction={loadMySkips} content={skipsList} currentPage={writable(1)} totalPages={10} pagesLocation="start"/>
+<CreateSkipModal bind:showModal={showCreateSkipModal} />
+<ExtendSkipModal bind:showModal={showExtendSkipModal} {selectedSkip} />
 
 {#snippet skipsList(skipsPage: MySkipsPage) }
     <div class="skips-container">
@@ -41,34 +48,9 @@
     </div>
 {/snippet}
 
-<Modal bind:showModal={showSkipModal}>
-    {#snippet header()}
-        <div class="modal-header">
-            <h2>
-                Пропуск №{selectedSkip?.id}
-            </h2>
-            {#if selectedSkip?.status}
-                <div style="color: {StatusColors.get(selectedSkip.status)}">
-                    {selectedSkip.status}
-                </div>
-            {/if}
-        </div>
-    {/snippet}
-    <LightInput title="Причина:" name="reason" value={selectedSkip?.reason} readonly />
-    <LightInput title="Дата начала:" name="startDate" type="date" value={selectedSkip?.startDate} readonly />
-    <LightInput title="Действует до:" name="endDate" type="date" value={selectedSkip?.endDate} />
-    <FilesList files={selectedSkip?.files} onRemove={() => {}} onAdd={() => {}} />
-</Modal>
-
 <style>
     h1 {
         font-size: 32px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
-
-    h2 {
-        font-size: 24px;
         margin-top: 10px;
         margin-bottom: 20px;
     }
@@ -100,9 +82,26 @@
         margin-bottom: 5px;
     }
 
-    .modal-header {
+    .title-container {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        height: 100%;
+        gap: 5px;
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        border: 0px;
+        padding-bottom: 5px;
+        cursor: pointer;
+    }
+
+    img {
+        width: 14px;
+        height: 14px;
+        filter: invert(100%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(100%) contrast(100%);
     }
 </style>

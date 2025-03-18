@@ -1,5 +1,5 @@
 <script>
-	let { showModal = $bindable(), header, children } = $props();
+	let { showModal = $bindable(), onsubmit, header, children } = $props();
 
 	let dialog = $state();
 
@@ -15,12 +15,12 @@
         onclose={() => (showModal = false)}
         onclick={(e) => { if (e.target === dialog) dialog.close(); }}
     >
-        <div class="modal">
+        <form class="modal" {onsubmit}>
             {@render header?.()}
             {@render children?.()}
             <!-- svelte-ignore a11y_autofocus -->
-            <button autofocus onclick={() => dialog.close()}>Создать</button>
-        </div>
+            <button autofocus type="submit">Создать</button>
+		</form>
     </dialog>
 </div>
 
@@ -45,7 +45,7 @@
 		background: rgba(0, 0, 0, 0.2);
 	}
 
-	dialog > div {
+	dialog > form {
 		padding: 1em;
 	}
 

@@ -27,3 +27,15 @@ interface GenericSkipsPage<T extends BasicPageEntry> {
     currenctSize: number,
     skips: T[]
 }
+
+export interface Skip {
+    reason: Reason,
+    startDate: Date,
+    endDate: Date,
+    files: any[]
+}
+
+export interface SkipExtension {
+    newFiles: string[],
+    endDate: Date,
+}
