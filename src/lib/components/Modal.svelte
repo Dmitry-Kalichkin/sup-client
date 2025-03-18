@@ -1,5 +1,7 @@
 <script>
-	let { showModal = $bindable(), header, children } = $props();
+    import { on } from "svelte/events";
+
+	let { showModal = $bindable(), onsubmit=null, header, children, onClose=null } = $props();
 
 	let dialog = $state();
 
@@ -12,15 +14,17 @@
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
     <dialog
         bind:this={dialog}
-        onclose={() => (showModal = false)}
+        onclose={() => {showModal = false; onClose?.()}}
         onclick={(e) => { if (e.target === dialog) dialog.close(); }}
     >
-        <div class="modal">
+        <form class="modal" {onsubmit}>
             {@render header?.()}
             {@render children?.()}
             <!-- svelte-ignore a11y_autofocus -->
-            <button autofocus onclick={() => dialog.close()}>Создать</button>
-        </div>
+			{#if onsubmit}
+			 	<button autofocus type="submit">Создать</button>
+			{/if}
+		</form>
     </dialog>
 </div>
 
@@ -45,7 +49,7 @@
 		background: rgba(0, 0, 0, 0.2);
 	}
 
-	dialog > div {
+	dialog > form {
 		padding: 1em;
 	}
 

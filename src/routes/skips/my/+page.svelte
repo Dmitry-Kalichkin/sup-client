@@ -1,24 +1,44 @@
 <script lang="ts">
     import { skipsService } from "$lib/service/SkipsService";
     import  Page  from "$lib/components/Page.svelte";
-    import type { MySkipsPage } from "$lib/data/skips/Skips";
+    import type { MySkipsPage, MySkipsPageEntry, Skip, SkipExtension } from "$lib/data/skips/Skips";
     import { writable } from "svelte/store";
     import { parseDate } from "$lib/utils/DateUtils";
     import { StatusColors } from "$lib/data/skips/Status";
+    import ExtendSkipModal from "$lib/components/ExtendSkipModal.svelte";
+    import CreateSkipModal from "$lib/components/CreateSkipModal.svelte";
+
+    let showExtendSkipModal = $state(false);
+    let showCreateSkipModal = $state(false);
+    let selectedSkip = $state<MySkipsPageEntry | null>(null);
 
     async function loadMySkips(): Promise<MySkipsPage> {
         return await skipsService.getMySkips({page: 1, status: null, reason: null, startDate: null, endDate: null});
     }
+
+    function pickSkip(skip: MySkipsPageEntry) {
+        selectedSkip = skip;
+        showExtendSkipModal = true;
+    }
 </script>
 
-<h1>Мои пропуски</h1>
+<div class="title-container">
+    <h1>Мои пропуски</h1>
+    <button onclick={() => showCreateSkipModal = true}>
+        <img src="/images/plus-icon.svg" alt="Добавить пропуск">
+    </button>
+</div>
 <Page loadFunction={loadMySkips} content={skipsList} currentPage={writable(1)} totalPages={10} pagesLocation="start"/>
+<CreateSkipModal bind:showModal={showCreateSkipModal} />
+{#if selectedSkip}
+    <ExtendSkipModal bind:showModal={showExtendSkipModal} {selectedSkip} />
+{/if}
 
 {#snippet skipsList(skipsPage: MySkipsPage) }
     <div class="skips-container">
         {#each skipsPage.skips as skip}
-            <div class="skip">
-                <div class="">
+            <div class="skip" onclick={() => pickSkip(skip)}>
+                <div>
                     <div class="skip-id">Пропуск №{skip.id}</div>
                     <div>
                         {skip.reason}, {parseDate(skip.startDate)} - {parseDate(skip.endDate)}
@@ -62,5 +82,28 @@
         font-weight: bold;
         font-size: 18px;
         margin-bottom: 5px;
+    }
+
+    .title-container {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        gap: 5px;
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        border: 0px;
+        padding-bottom: 5px;
+        cursor: pointer;
+    }
+
+    img {
+        width: 14px;
+        height: 14px;
+        filter: invert(100%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(100%) contrast(100%);
     }
 </style>

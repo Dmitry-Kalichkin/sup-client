@@ -7,7 +7,7 @@ export interface MySkipsPage extends GenericSkipsPage<MySkipsPageEntry> {}
 
 export interface SkipPageEntry extends BasicPageEntry {
     fullName: string,
-    group: string
+    group: string | null
 }
 
 export interface MySkipsPageEntry extends BasicPageEntry {}
@@ -17,7 +17,8 @@ interface BasicPageEntry {
     status: Status,
     reason: Reason,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    files: string[]
 }
 
 interface GenericSkipsPage<T extends BasicPageEntry> {
@@ -25,4 +26,16 @@ interface GenericSkipsPage<T extends BasicPageEntry> {
     totalPages: number,
     currenctSize: number,
     skips: T[]
+}
+
+export interface Skip {
+    reason: Reason,
+    startDate: Date,
+    endDate: Date,
+    files: any[]
+}
+
+export interface SkipExtension {
+    newFiles: string[],
+    endDate: Date,
 }

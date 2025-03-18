@@ -1,23 +1,35 @@
 <script lang="ts">
     import { skipsService } from "$lib/service/SkipsService";
     import  Page  from "$lib/components/Page.svelte";
-    import type { SkipsPage } from "$lib/data/skips/Skips";
+    import type { SkipPageEntry, SkipsPage } from "$lib/data/skips/Skips";
     import { writable } from "svelte/store";
     import { parseDate } from "$lib/utils/DateUtils";
     import { StatusColors } from "$lib/data/skips/Status";
+    import VerifySkipModal from "$lib/components/VerifySkipModal.svelte";
+
+    let selectedSkip = $state<SkipPageEntry | null>(null);
+    let showSkip = $state(false);
 
     async function loadSkips(): Promise<SkipsPage> {
         return await skipsService.getSkips({page: 1, status: null, reason: null, startDate: null, endDate: null, fullName: null});
+    }
+
+    function pickSkip(skip: SkipPageEntry) {
+        selectedSkip = skip;
+        showSkip = true;
     }
 </script>
 
 <h1>Пропуски</h1>
 <Page loadFunction={loadSkips} content={skipsList} currentPage={writable(1)} totalPages={10} pagesLocation="start"/>
+{#if showSkip}
+    <VerifySkipModal bind:showModal={showSkip} {selectedSkip} />
+{/if}
 
 {#snippet skipsList(skipsPage: SkipsPage)}
     <div class="skips-container">
         {#each skipsPage.skips as skip}
-            <div class="skip">
+            <div class="skip" onclick={() => pickSkip(skip)}>
                 <div class="">
                     <div class="skip-id">Пропуск №{skip.id}</div>
                     <div class="skip-title">
