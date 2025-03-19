@@ -37,13 +37,15 @@ class UserService {
         this.authContext.setUsername(user.name);
         this.authContext.setEmail(user.email);
         this.authContext.setRoles(user.roles);
+        const redirect = this.isManager() ? "/skips" : "/skips/my";
+        window.location.href = redirect;
     }
 
     public logout() {
         this.authContext.removeToken();
         this.authContext.removeUsername();
         this.authContext.removeRoles();
-        window.location.reload();
+        window.location.assign("/login");
     }
 
     public async getUsers(parameters: UsersPageParameters): Promise<UsersPage> {
