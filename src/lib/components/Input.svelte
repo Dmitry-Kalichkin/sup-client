@@ -1,11 +1,11 @@
 <script lang="ts">
-    let {label, name, type, width, inline = false} = $props();
+    let {label, name, type, width, inline = false, value=$bindable(), required=false} = $props();
 
 </script>
 
 <div class="input-block {inline ? 'inline' : ''}">
     <label for={name}>{label}</label>
-    <input id={name} name={name} style="width: {width}" type={type} placeholder="">
+    <input id={name} name={name} bind:value={value} style="width: {width}" type={type} placeholder="" {required}>
 </div>
 
 <style>

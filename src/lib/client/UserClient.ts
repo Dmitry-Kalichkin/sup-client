@@ -1,3 +1,4 @@
+import type { CreateUser } from '$lib/data/user/CreateUser';
 import type { Credentials } from '$lib/data/user/Credentials';
 import { Role } from '$lib/data/user/Role';
 import type { User } from '$lib/data/user/User';
@@ -20,6 +21,13 @@ export class UserClient extends BaseClient {
             throw new Error('Unexcepted error');
         }
         return await response.json();
+    }
+
+    public async createUser(user: CreateUser): Promise<void> {
+        const response = await this.post('register', user);
+        if (!response.ok) {
+            throw new Error('Unexcepted error');
+        }
     }
 
     public async getUsers(parameters: UsersPageParameters): Promise<UsersPage> {

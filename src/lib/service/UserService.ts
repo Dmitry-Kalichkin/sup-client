@@ -4,6 +4,7 @@ import { Role } from '$lib/data/user/Role';
 import type { Credentials } from '$lib/data/user/Credentials';
 import type { User } from '$lib/data/user/User';
 import type { UsersPage, UsersPageParameters } from '$lib/data/user/UsersPage';
+import type { CreateUser } from '$lib/data/user/CreateUser';
 
 class UserService {
     private readonly authContext: AuthContext;
@@ -46,6 +47,10 @@ class UserService {
         this.authContext.removeUsername();
         this.authContext.removeRoles();
         window.location.assign("/login");
+    }
+
+    public async createUser(user: CreateUser) {
+        await this.userClient.createUser(user);
     }
 
     public async getUsers(parameters: UsersPageParameters): Promise<UsersPage> {

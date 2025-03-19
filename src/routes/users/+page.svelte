@@ -6,6 +6,7 @@
     import { writable } from "svelte/store";
     import Modal from "$lib/components/Modal.svelte";
     import Input from "$lib/components/Input.svelte";
+    import CreateUserModal from "$lib/components/CreateUserModal.svelte";
 
     let showCreateUserModal = $state(false);
     let showCreateUsersBatchModal = $state(false);
@@ -73,17 +74,7 @@
     <Page loadFunction={loadUsers} content={usersList} currentPage={pageNumber} totalPages={totalPages}/>
 </div>
 
-<Modal bind:showModal={showCreateUserModal}>
-    {#snippet header()}
-        <h2>
-            Создать пользователя
-        </h2>
-    {/snippet}
-
-    <Input label="ФИО" name="fullName" type="text" width="250px" />
-    <Input label="Email" name="email" type="email" width="250px" />
-    <Input label="Пароль" name="password" type="password" width="250px" />
-</Modal>
+<CreateUserModal bind:showModal={showCreateUserModal} />
 
 <Modal bind:showModal={showCreateUsersBatchModal}>
     {#snippet header()}
