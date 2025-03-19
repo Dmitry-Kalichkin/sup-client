@@ -5,7 +5,7 @@
     import { Status } from "$lib/data/skips/Status";
     import { page } from '$app/stores';
 
-    function isFullNameUnknown(): boolean {
+    function isStudentNotSelected(): boolean {
         return $page.url.pathname !== '/skips/my';
     }
 </script>
@@ -13,8 +13,10 @@
 <div class="container">
     <form class="search-box">
         <h1>Фильтры</h1>
-        {#if isFullNameUnknown()}
+        {#if isStudentNotSelected()}
             <Input label="ФИО пользователя" name="fullName" type="text" width="290px" />
+            <Input label="Группа" name="group" type="text" width="290px" />
+
         {/if}
         <div class="group-filters">
             <Select label="Статус" name="status" optionsEnum={Status} width="150px" />
@@ -25,6 +27,7 @@
             <Input label="Пропуск до" name="endTime" type="date" width="125px" />
         </div>
         <button type="submit">Найти</button>
+        <button type="submit">Экспортировать</button>
     </form>
     <div class="skips-list">
         <slot />
