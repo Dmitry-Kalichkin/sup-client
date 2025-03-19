@@ -24,7 +24,7 @@
     </nav>
     <nav>
         {#if userService.isAuthorized()}
-            <a href="/profile">{userService.getUsername()}</a>
+            <a href="#">{userService.getUsername()}</a>
             <a href="#" onclick={() => userService.logout()}>Выйти</a>
         {:else}
             <a href="/login">Вход</a>
