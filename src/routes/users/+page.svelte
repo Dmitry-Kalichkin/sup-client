@@ -99,7 +99,7 @@
     <Modal bind:showModal={showEditUserModal}>
         {#snippet header()}
             <h2>
-                {editUser?.fullName}
+                {editUser?.name}
             </h2>
             <div class="title-email">{editUser?.email}</div>
         {/snippet}
@@ -119,7 +119,7 @@
         {#each users as user}
             <div class="user" onclick={() => onUserClick(user)}>
                 <div>
-                    <div class="user-name">{user.fullName}</div>
+                    <div class="user-name">{user.name}</div>
                     <div class="user-email">{user.email}</div>
                     <div class="user-roles">{user.roles.map(role => translations.get(role)).join(', ')}</div>
                 </div>

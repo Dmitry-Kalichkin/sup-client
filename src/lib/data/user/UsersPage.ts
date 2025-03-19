@@ -15,7 +15,7 @@ export interface UsersPage {
 
 export interface UsersPageEntry {
     id: number,
-    fullName: string,
+    name: string,
     email: string,
     skips: number,
     group: string,

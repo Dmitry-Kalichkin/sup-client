@@ -23,18 +23,24 @@ export class UserClient extends BaseClient {
     }
 
     public async getUsers(parameters: UsersPageParameters): Promise<UsersPage> {
-        await new Promise(res => setTimeout(res, 1000));
+        const response = await this.get('users', null);
+        if (!response.ok) {
+            throw new Error('Unexcepted error');
+        }
+        const page = await response.json();
         return {
-            page: parameters.page,
-            totalPages: 5,
-            currenctSize: 4,
-            users: [
-                {id: 1, fullName: "Админ Админович Админов", email: "admin@mail.com", roles: [Role.ADMIN], skips: 200},
-                {id: 2, fullName: "Студент Студентович Студентов", email: "student@mail.com", roles: [Role.STUDENT], skips: 0},
-                {id: 3, fullName: "Декан Деканович Деканов", email: "deanery@mailc.om", roles: [Role.DEANERY], skips: 47},
-                {id: 4, fullName: "Преподаватель Преподавателивич Преподавалов", email: "teacher@mail.com", roles: [Role.TEACHER], skips: 7},
-                {id: 5, fullName: "Тест Тестович Тестов", email: "test@mail.com", roles: [Role.ADMIN, Role.TEACHER], skips: 0}
-            ]
+            page: page.page,
+            totalPages: page.totalPages,
+            currenctSize: page.currenctSize,
+            users: page.data.map(user => {
+                return {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    roles: user.roles.map(role => role.name as Role),
+                    skips: user.skips.length
+                }
+            })
         };
     }
 }
