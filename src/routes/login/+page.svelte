@@ -7,14 +7,15 @@
     let validated = $state(false);
     let isResponseSuccessful = $state(true);
 
-    function onsubmit(e: SubmitEvent) {
+    async function onsubmit(e: SubmitEvent) {
         if (isFormInvalid()) {
             return;
         }
         try {
-            const creds: Credentials = {username: username, password: password};
-            userService.login(creds);
+            const creds: Credentials = {email: username, password: password};
+            await userService.login(creds);
         } catch (e) {
+            console.error(e);
             isResponseSuccessful = false;
         }
     }

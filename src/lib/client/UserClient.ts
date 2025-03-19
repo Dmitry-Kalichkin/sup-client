@@ -2,20 +2,16 @@ import type { Credentials } from '$lib/data/user/Credentials';
 import { Role } from '$lib/data/user/Role';
 import type { User } from '$lib/data/user/User';
 import type { UsersPage, UsersPageParameters } from '$lib/data/user/UsersPage';
+import { BaseClient } from './BaseClient';
 
-export class UserClient {
-    private readonly baseUrl: string;
-
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
-    }
-
-    public login(credentials: Credentials): string {
-        const user: User | undefined = stubUsers.get(credentials.username);
-        if (user == null || user.username != credentials.password) {
+export class UserClient extends BaseClient {
+    public async login(credentials: Credentials): Promise<string> {
+        const response = await this.post('login', credentials);
+        if (!response.ok) {
             throw new Error('Wrong credentials');
         }
-        return user.username;
+        const res = await response.json();
+        return res.token;
     }
 
     public getProfile(token: string): User {
@@ -43,7 +39,7 @@ export class UserClient {
     }
 }
 
-export const userClient = new UserClient('http://localhost/users');
+export const userClient = new UserClient();
 
 const stubUsers = new Map<string, User>([
     ["admin", { username: 'admin', email: 'admin@mail.com', role: Role.ADMIN }],

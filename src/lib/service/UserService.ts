@@ -30,13 +30,12 @@ class UserService {
         return this.authContext.getUsername();
     }
 
-    public login(credentials: Credentials) {
-        const token: string = this.userClient.login(credentials);
+    public async login(credentials: Credentials) {
+        const token: string = await this.userClient.login(credentials);
         const user: User = this.userClient.getProfile(token);
         this.authContext.setToken(token);
         this.authContext.setUsername(user.username);
         this.authContext.setRole(user.role);
-        window.location.reload();
     }
 
     public logout() {
