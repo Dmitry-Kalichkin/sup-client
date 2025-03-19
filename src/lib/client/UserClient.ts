@@ -14,12 +14,12 @@ export class UserClient extends BaseClient {
         return res.token;
     }
 
-    public getProfile(token: string): User {
-        const user: User | undefined = stubUsers.get(token);
-        if (user == null) {
-            throw new Error('Wrong credentials');
+    public async getProfile(): Promise<User> {
+        const response = await this.get('profile', null);
+        if (!response.ok) {
+            throw new Error('Unexcepted error');
         }
-        return user;
+        return await response.json();
     }
 
     public async getUsers(parameters: UsersPageParameters): Promise<UsersPage> {
@@ -40,10 +40,3 @@ export class UserClient extends BaseClient {
 }
 
 export const userClient = new UserClient();
-
-const stubUsers = new Map<string, User>([
-    ["admin", { username: 'admin', email: 'admin@mail.com', role: Role.ADMIN }],
-    ["deanery", { username: 'deanery', email: 'deanery@mail.com', role: Role.DEANERY }],
-    ["student", { username: 'student', email: 'student@mail.com', role: Role.STUDENT }],
-    ["teacher", { username: 'teacher', email: 'teacher@mail.com', role: Role.TEACHER }]
-]);

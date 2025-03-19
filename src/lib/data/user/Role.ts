@@ -1,8 +1,8 @@
 export enum Role {
-    ADMIN = "ADMIN",
-    DEANERY = "DEANERY",
-    STUDENT = "USER",
-    TEACHER = "TEACHER"
+    ADMIN = "admin",
+    DEANERY = "dean",
+    STUDENT = "student",
+    TEACHER = "teacher"
 }
 
 export const translations = new Map<Role, string>([

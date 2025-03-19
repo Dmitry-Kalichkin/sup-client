@@ -15,15 +15,15 @@ class UserService {
     }
 
     public isManager(): boolean {
-        return this.isAuthorized() && (this.getRole() === Role.ADMIN || this.getRole() === Role.DEANERY)
+        return this.isAuthorized() && (this.hasRole(Role.ADMIN) || this.hasRole(Role.DEANERY));
     }
 
     public isAuthorized(): boolean {
         return this.authContext.getToken() !== null;
     }
 
-    public getRole(): Role | null {
-        return this.authContext.getRole();
+    public hasRole(role: Role): boolean {
+        return this.authContext.getRoles()?.includes(role) ?? false;
     }
 
     public getUsername(): string | null {
@@ -32,16 +32,17 @@ class UserService {
 
     public async login(credentials: Credentials) {
         const token: string = await this.userClient.login(credentials);
-        const user: User = this.userClient.getProfile(token);
         this.authContext.setToken(token);
-        this.authContext.setUsername(user.username);
-        this.authContext.setRole(user.role);
+        const user: User = await this.userClient.getProfile();
+        this.authContext.setUsername(user.name);
+        this.authContext.setEmail(user.email);
+        this.authContext.setRoles(user.roles);
     }
 
     public logout() {
         this.authContext.removeToken();
         this.authContext.removeUsername();
-        this.authContext.removeRole();
+        this.authContext.removeRoles();
         window.location.reload();
     }
 
