@@ -1,12 +1,16 @@
 import { Reason } from "$lib/data/skips/Reason";
 import type { MySkipsPage, Skip, SkipsPage } from "$lib/data/skips/Skips";
 import type { MySkipsParameters, SkipsParameters } from "$lib/data/skips/SkipsParameters";
-import { getStatus, Status } from "$lib/data/skips/Status";
+import { getStatus, Status, stringifyStatus } from "$lib/data/skips/Status";
 import { BaseClient } from "./BaseClient";
 
 export class SkipsClient extends BaseClient {
     public async createSkip(skip: FormData): Promise<void> {
         await this.postWithFiles('skips', skip);
+    }
+
+    public async changeStatus(id: number, status: Status): Promise<void> {
+        await this.post('skips/' + id + '/status', { status: stringifyStatus(status) });
     }
 
     public async getSkips(parameters: SkipsParameters): Promise<SkipsPage> {

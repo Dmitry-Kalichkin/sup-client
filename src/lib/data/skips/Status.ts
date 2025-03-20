@@ -22,3 +22,16 @@ export function getStatus(status: string): Status {
             return Status.PENDING;
     }
 }
+
+export function stringifyStatus(status: Status): string {
+    switch (status) {
+        case Status.PENDING:
+            return "pending";
+        case Status.APPROVED:
+            return "approved";
+        case Status.REJECTED:
+            return "rejected";
+        default:
+            return "pending";
+    }
+}
