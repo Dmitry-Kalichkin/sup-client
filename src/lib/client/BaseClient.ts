@@ -28,10 +28,11 @@ export class BaseClient {
         return response;
     }
 
-    protected async postWithFiles(url: string, body: any): Promise<Response> {
+    protected async postWithFiles(url: string, body: FormData): Promise<Response> {
         const response = await fetch(this.API_URL + url, {
             method: 'POST',
             headers: {
+                'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
