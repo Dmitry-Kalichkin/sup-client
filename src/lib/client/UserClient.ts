@@ -31,15 +31,23 @@ export class UserClient extends BaseClient {
     }
 
     public async getUsers(parameters: UsersPageParameters): Promise<UsersPage> {
-        const response = await this.get('users', null);
+        const params = {
+            page: parameters.page.toString(),
+            per_page: parameters.per_page.toString()
+        };
+        if (parameters.fullName) {
+            params['fullName'] = parameters.fullName;
+        }
+        if (parameters.role) {
+            params['role'] = parameters.role;
+        }
+        const response = await this.get('users', new URLSearchParams(params));
         if (!response.ok) {
             throw new Error('Unexcepted error');
         }
         const page = await response.json();
         return {
-            page: page.page,
-            totalPages: page.totalPages,
-            currenctSize: page.currenctSize,
+            pagination: page.pagination,
             users: page.data.map(user => {
                 return {
                     id: user.id,

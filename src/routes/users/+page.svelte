@@ -3,7 +3,6 @@
     import { Role, translations } from "$lib/data/user/Role";
     import type { UsersPageEntry, UsersPage } from "$lib/data/user/UsersPage";
     import userService from "$lib/service/UserService";
-    import { writable } from "svelte/store";
     import Modal from "$lib/components/Modal.svelte";
     import CreateUserModal from "$lib/components/CreateUserModal.svelte";
     import UpdateUserModal from "$lib/components/UpdateUserModal.svelte";
@@ -11,16 +10,18 @@
     let showCreateUserModal = $state(false);
     let showCreateUsersBatchModal = $state(false);
     let showEditUserModal = $state(false);
+
     let fullName: string | null = $state(null);
-    let roles: Role[] | null = $state(null);
-    let pageNumber = writable<number>(1);
-    let totalPages: number = $state(1);
+    let role: Role | null = $state(null);
+    let pageNumber = $state<number>(1);
+    let totalPages = $state(1);
+
     let editUser = $state<UsersPageEntry | null>(null);
 
     async function loadUsers(): Promise<UsersPageEntry[]> {
-        const usersPage: UsersPage = await userService.getUsers({fullName: fullName, roles: roles, page: $pageNumber});
-        $pageNumber = usersPage.page;
-        totalPages = usersPage.totalPages;
+        const usersPage: UsersPage = await userService.getUsers({fullName: fullName, role: role, page: pageNumber, per_page: 5});
+        pageNumber = usersPage.pagination.current_page;
+        totalPages = usersPage.pagination.last_page;
         return usersPage.users;
     }
 
@@ -33,14 +34,14 @@
 <div class="container">
     <div>
         <h1>Пользователи</h1>
-        <div class="search-box">
+        <form class="search-box">
             <div class="input-block">
                 <label for="fullName">ФИО пользователя</label>
                 <input id="fullName" type="text" bind:value={fullName} placeholder="ФИО">
             </div>
             <div class="input-block">
                 <label for="role">Роли</label>
-                <select id="role" bind:value={roles} placeholder="Роль" multiple>
+                <select id="role" bind:value={role} placeholder="Роль">
                     <option value={null}>Все роли</option>
                     {#each Object.values(Role) as role}
                         <option value={role}>{translations.get(role)}</option>
@@ -48,7 +49,7 @@
                 </select>
             </div>
             <div class="buttons-group">
-                <button>Найти</button>
+                <button type="submit">Найти</button>
                 {#if userService.isManager()}
                     <button onclick={() => (showCreateUserModal = true)}>
                         <img src="/images/plus-icon.svg" alt="Добавить пользователя" />
@@ -58,9 +59,9 @@
                     </button>    
                 {/if}
             </div>
-        </div>
+        </form>
     </div>
-    <Page loadFunction={loadUsers} content={usersList} currentPage={pageNumber} totalPages={totalPages}/>
+    <Page loadFunction={loadUsers} content={usersList} bind:currentPage={pageNumber} bind:totalPages={totalPages}/>
 </div>
 
 <CreateUserModal bind:showModal={showCreateUserModal} />

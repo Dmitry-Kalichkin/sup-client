@@ -1,15 +1,15 @@
+import type { Pagination } from "../Pagination";
 import type { Role } from "./Role";
 
 export interface UsersPageParameters {
     fullName: string | null,
-    roles: Role[] | null,
-    page: number
+    role: Role | null,
+    page: number,
+    per_page: number
 }
 
 export interface UsersPage {
-    page: number,
-    totalPages: number,
-    currenctSize: number,
+    pagination: Pagination,
     users: UsersPageEntry[]
 }
 
