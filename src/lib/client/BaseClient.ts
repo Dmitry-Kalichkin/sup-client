@@ -27,4 +27,16 @@ export class BaseClient {
         });
         return response;
     }
+
+    protected async postWithFiles(url: string, body: any): Promise<Response> {
+        const response = await fetch(this.API_URL + url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: body
+        });
+        return response;
+    }
 }

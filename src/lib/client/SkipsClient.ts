@@ -1,10 +1,14 @@
 import { Reason } from "$lib/data/skips/Reason";
-import type { MySkipsPage, SkipsPage } from "$lib/data/skips/Skips";
+import type { MySkipsPage, Skip, SkipsPage } from "$lib/data/skips/Skips";
 import type { MySkipsParameters, SkipsParameters } from "$lib/data/skips/SkipsParameters";
 import { Status } from "$lib/data/skips/Status";
 import { BaseClient } from "./BaseClient";
 
 export class SkipsClient extends BaseClient {
+    public async createSkip(skip: FormData): Promise<void> {
+        await this.postWithFiles('skips', skip);
+    }
+
     public async getSkips(parameters: SkipsParameters): Promise<SkipsPage> {
         await new Promise(res => setTimeout(res, 1000));
         return {
@@ -42,7 +46,6 @@ export class SkipsClient extends BaseClient {
         return {
             pagination: page.pagination,
             skips: page.data.map(skip => {
-                console.log(skip.document_paths);
                 return {
                     id: skip.id,
                     status: skip.status,

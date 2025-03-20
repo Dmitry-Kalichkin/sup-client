@@ -1,5 +1,5 @@
 import type { SkipsClient } from "$lib/client/SkipsClient";
-import type { MySkipsPage, SkipsPage } from "$lib/data/skips/Skips";
+import type { MySkipsPage, Skip, SkipsPage } from "$lib/data/skips/Skips";
 import type { MySkipsParameters, SkipsParameters } from "$lib/data/skips/SkipsParameters";
 import { skipsClient } from "$lib/client/SkipsClient";
 
@@ -8,6 +8,10 @@ export class SkipsService {
 
     constructor(skipsClient: SkipsClient) {
         this.skipsClient = skipsClient;
+    }
+
+    public async createSkip(skip: FormData): Promise<void> {
+        await this.skipsClient.createSkip(skip);
     }
 
     public async getSkips(parameters: SkipsParameters): Promise<SkipsPage> {

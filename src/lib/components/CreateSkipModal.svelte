@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Reason } from "$lib/data/skips/Reason";
+    import { skipsService } from "$lib/service/SkipsService";
     import FilesList from "./FilesList.svelte";
     import LightInput from "./LightInput.svelte";
     import LightSelect from "./LightSelect.svelte";
@@ -12,8 +13,9 @@
     let endDate = $state<string | null>(null);
     let files = $state<any[]>([]);
 
-    function onsubmit(e: SubmitEvent) {
-        console.log(reason, startDate, endDate, files);
+    async function onsubmit(e: SubmitEvent) {
+        const formData = new FormData(e.target as HTMLFormElement);
+        await skipsService.createSkip(formData);
     }
 
     function onClose() {
@@ -33,8 +35,8 @@
         </div>
     {/snippet}
     <LightSelect label="Причина:" name="reason" optionsEnum={Reason} />
-    <LightInput title="Дата начала:" name="startDate" type="date" bind:value={startDate} />
-    <LightInput title="Действует до:" name="endDate" type="date" bind:value={endDate} />
+    <LightInput title="Дата начала:" name="start_date" type="date" bind:value={startDate} />
+    <LightInput title="Действует до:" name="end_date" type="date" bind:value={endDate} />
     <FilesList files={files} canRemoeve={() => true} onAdd={() => {}} />
 </Modal>
 
