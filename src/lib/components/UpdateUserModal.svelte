@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Role, translations } from "$lib/data/user/Role";
+    import userService from "$lib/service/UserService";
     import Input from "./Input.svelte";
     import Modal from "./Modal.svelte";
 
@@ -28,9 +29,11 @@
         <div class="title-email">{editUser?.email}</div>
     {/snippet}
     <div class="roles-container">
-        {#each Object.values(Role) as role}
-            <button class="{editUser?.roles.includes(role) ? '' : 'disabled'}" onclick={(e) => changeRoles(e, role)}>{translations.get(role)}</button>
-        {/each}
+        {#if userService.hasRole(Role.ADMIN)}
+            <button class="{editUser?.roles.includes(Role.DEANERY) ? '' : 'disabled'}" onclick={(e) => changeRoles(e, Role.DEANERY)}>{translations.get(Role.DEANERY)}</button>
+        {/if}
+        <button class="{editUser?.roles.includes(Role.TEACHER) ? '' : 'disabled'}" onclick={(e) => changeRoles(e, Role.TEACHER)}>{translations.get(Role.TEACHER)}</button>
+        <button class="{editUser?.roles.includes(Role.STUDENT) ? '' : 'disabled'}" onclick={(e) => changeRoles(e, Role.STUDENT)}>{translations.get(Role.STUDENT)}</button>
     </div>
     {#if editUser?.roles.includes(Role.STUDENT)}
         <Input inline label="Группа:" name="group" bind:value={editUser.group} type="text" width="250px" />

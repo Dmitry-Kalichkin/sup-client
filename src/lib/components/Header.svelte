@@ -19,7 +19,7 @@
         {#if userService.isAuthorized() && userService.hasRole(Role.STUDENT)}
             <a href="/skips/my">Мои пропуски</a>
         {/if}
-        {#if userService.isManager() || userService.hasRole(Role.TEACHER)}
+        {#if userService.isManager()}
             <a href="/users">Пользователи</a>
         {/if}
     </nav>
