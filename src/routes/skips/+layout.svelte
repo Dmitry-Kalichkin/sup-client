@@ -16,7 +16,6 @@
         {#if isStudentNotSelected()}
             <Input label="ФИО пользователя" name="fullName" type="text" width="290px" />
             <Input label="Группа" name="group" type="text" width="290px" />
-
         {/if}
         <div class="group-filters">
             <Select label="Статус" name="status" optionsEnum={Status} width="150px" />

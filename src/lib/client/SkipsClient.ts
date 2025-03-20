@@ -2,14 +2,9 @@ import { Reason } from "$lib/data/skips/Reason";
 import type { MySkipsPage, SkipsPage } from "$lib/data/skips/Skips";
 import type { MySkipsParameters, SkipsParameters } from "$lib/data/skips/SkipsParameters";
 import { Status } from "$lib/data/skips/Status";
+import { BaseClient } from "./BaseClient";
 
-export class SkipsClient {
-    private readonly baseUrl: string;
-
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl
-    }
-
+export class SkipsClient extends BaseClient {
     public async getSkips(parameters: SkipsParameters): Promise<SkipsPage> {
         await new Promise(res => setTimeout(res, 1000));
         return {
@@ -59,4 +54,4 @@ export class SkipsClient {
     }
 }
 
-export const skipsClient = new SkipsClient('http://localhost/skips');
+export const skipsClient = new SkipsClient();
