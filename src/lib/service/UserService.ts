@@ -35,7 +35,7 @@ class UserService {
         const token: string = await this.userClient.login(credentials);
         this.authContext.setToken(token);
         const user: User = await this.userClient.getProfile();
-        this.authContext.setUsername(user.name);
+        this.authContext.setUsername(user.fullName);
         this.authContext.setEmail(user.email);
         this.authContext.setRoles(user.roles);
         const redirect = this.isManager() ? "/skips" : "/skips/my";
