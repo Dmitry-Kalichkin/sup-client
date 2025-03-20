@@ -1,7 +1,7 @@
 import { Reason } from "$lib/data/skips/Reason";
 import type { MySkipsPage, Skip, SkipsPage } from "$lib/data/skips/Skips";
 import type { MySkipsParameters, SkipsParameters } from "$lib/data/skips/SkipsParameters";
-import { Status } from "$lib/data/skips/Status";
+import { getStatus, Status } from "$lib/data/skips/Status";
 import { BaseClient } from "./BaseClient";
 
 export class SkipsClient extends BaseClient {
@@ -10,45 +10,34 @@ export class SkipsClient extends BaseClient {
     }
 
     public async getSkips(parameters: SkipsParameters): Promise<SkipsPage> {
-        await new Promise(res => setTimeout(res, 1000));
-        return {
-            page: parameters.page,
-            totalPages: 5,
-            currenctSize: 4,
-            skips: [
-                {id: 0, fullName: "Иванов Иван Иванович", group: "972103",
-                    status: Status.PENDING, reason: Reason.ILL,
-                    startDate: new Date(), endDate: new Date(),
-                    files: []},
-                {id: 1, fullName: "Григорий Петрович Южников", group: null,
-                    status: Status.PENDING, reason: Reason.OTHER,
-                    startDate: new Date(), endDate: new Date(),
-                    files: ["files/file1.txt", "files/file2.txt"]},
-                {id: 2, fullName: "Василий Васильевич Васильев", group: "972103",
-                    status: Status.APPROVED, reason: Reason.ILL,
-                    startDate: new Date(), endDate: new Date(),
-                    files: ["files/file1.txt"]},
-                {id: 1, fullName: "Григорий Петрович Южников", group: "972103",
-                    status: Status.REJECTED, reason: Reason.OTHER, 
-                    startDate: new Date(), endDate: new Date(),
-                    files: ["files/file1.txt", "files/file2.txt"]},
-                {id: 2, fullName: "Василий Васильевич Васильев", group: "972103",
-                    status: Status.APPROVED, reason: Reason.ILL,
-                    startDate: new Date(), endDate: new Date(),
-                    files: ["files/file1.txt"]},
-            ]
-        };
-    }
-
-    public async getMySkips(parameters: MySkipsParameters): Promise<MySkipsPage> {
-        const response = await this.get('skips/my', null);
+        const response = await this.get('skips', null);
         const page = await response.json();
         return {
             pagination: page.pagination,
             skips: page.data.map(skip => {
                 return {
                     id: skip.id,
-                    status: skip.status,
+                    fullName: skip.user.fullName,
+                    group: skip.user.group_id,
+                    status: getStatus(skip.status),
+                    reason: (skip.reason ? skip.reason as Reason : Reason.OTHER) ?? Reason.OTHER,
+                    startDate: this.toDate(skip.start_date), 
+                    endDate: this.toDate(skip.end_date),
+                    files: JSON.parse(skip.document_paths)
+                }
+            })
+        };
+    }
+
+    public async getMySkips(parameters: MySkipsParameters): Promise<MySkipsPage> {
+        const response = await this.get('skips/my-filtered', null);
+        const page = await response.json();
+        return {
+            pagination: page.pagination,
+            skips: page.data.map(skip => {
+                return {
+                    id: skip.id,
+                    status: getStatus(skip.status),
                     reason: (skip.reason ? skip.reason as Reason : Reason.OTHER) ?? Reason.OTHER,
                     startDate: this.toDate(skip.start_date), 
                     endDate: this.toDate(skip.end_date),

@@ -9,3 +9,16 @@ export const StatusColors = new Map<Status, string>([
     [Status.APPROVED, "green"],
     [Status.REJECTED, "red"]
 ]);
+
+export function getStatus(status: string): Status {
+    switch (status) {
+        case "pending":
+            return Status.PENDING;
+        case "approved":
+            return Status.APPROVED;
+        case "rejected":
+            return Status.REJECTED;
+        default:
+            return Status.PENDING;
+    }
+}
