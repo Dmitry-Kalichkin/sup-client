@@ -6,14 +6,17 @@ import type { User } from '$lib/data/user/User';
 import type { UsersPage, UsersPageParameters } from '$lib/data/user/UsersPage';
 import type { CreateUser } from '$lib/data/user/CreateUser';
 import type { UpdateUser } from '$lib/data/user/UpdateUser';
+import { groupService, GroupService } from './GroupService';
 
 class UserService {
     private readonly authContext: AuthContext;
     private readonly userClient: UserClient;
+    private readonly groupService: GroupService;
 
-    constructor(authContext: AuthContext, userClient: UserClient) {
+    constructor(authContext: AuthContext, userClient: UserClient, groupService: GroupService) {
         this.authContext = authContext;
         this.userClient = userClient;
+        this.groupService = groupService;
     }
 
     public isManager(): boolean {
@@ -59,8 +62,16 @@ class UserService {
     }
 
     public async getUsers(parameters: UsersPageParameters): Promise<UsersPage> {
-        return await this.userClient.getUsers(parameters);
+        const page = await this.userClient.getUsers(parameters);
+        const groups = await this.groupService.getGroups();
+        return {
+            pagination: page.pagination,
+            users: page.users.map(user => {
+                user.group_id = groups.filter(group => user.group_id == group.id)[0]?.group_number;
+                return user;
+            })
+        }
     }
 }
 
-export default new UserService(authContext, userClient);
+export default new UserService(authContext, userClient, groupService);

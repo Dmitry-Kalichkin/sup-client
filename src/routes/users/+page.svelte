@@ -23,7 +23,7 @@
     let editUser = $state<UsersPageEntry | null>(null);
     
     async function loadUsers(): Promise<UsersPageEntry[]> {
-        const usersPage: UsersPage = await userService.getUsers({fullName: fullName, role: role, page: pageNumber, per_page: 5});
+        const usersPage: UsersPage = await userService.getUsers({fullName: fullName, role: role, page: pageNumber, per_page: 5});        
         pageNumber = usersPage.pagination.current_page;
         totalPages = usersPage.pagination.last_page;
         return usersPage.users;
@@ -44,6 +44,14 @@
         newParams.set("role", role);
         newParams.set("page", pageNumber.toString());
         searchParams = newParams;
+    }
+
+    function getRoleItem(role: Role, group_id: number) {
+        const translation = translations.get(role);
+        if (role === Role.STUDENT) {
+            return translation + (group_id != null ? ` (${group_id})` : '');
+        }
+        return translation;
     }
 </script>
 
@@ -92,7 +100,7 @@
                 <div>
                     <div class="user-name">{user.name}</div>
                     <div class="user-email">{user.email}</div>
-                    <div class="user-roles">{user.roles.map(role => translations.get(role)).join(', ')}</div>
+                    <div class="user-roles">{user.roles.map(role => getRoleItem(role, user.group_id)).join(', ')}</div>
                 </div>
                 <div class="skips">
                     Пропуски: {user.skips}

@@ -37,20 +37,26 @@ export class SkipsClient extends BaseClient {
     }
 
     public async getMySkips(parameters: MySkipsParameters): Promise<MySkipsPage> {
-        await new Promise(res => setTimeout(res, 1000));
+        const response = await this.get('skips/my', null);
+        const page = await response.json();
         return {
-            page: parameters.page,
-            totalPages: 5,
-            currenctSize: 4,
-            skips: [
-                {id: 1, status: Status.PENDING, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: []},
-                {id: 1, status: Status.PENDING, reason: Reason.OTHER, startDate: new Date(), endDate: new Date(), files: ["files/file1.txt", "files/file2.txt", "files/file2.txt", "files/file2.txt"]},
-                {id: 2, status: Status.APPROVED, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: ["files/file1.txt"]},
-                {id: 3, status: Status.REJECTED, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: ["files/file1.txt", "files/file2.txt", "files/file2.txt"]},
-                {id: 4, status: Status.APPROVED, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: ["files/file1.txt", "files/file2.txt"]},
-                {id: 5, status: Status.REJECTED, reason: Reason.ILL, startDate: new Date(), endDate: new Date(), files: ["files/file2.txt"]},
-            ]
+            pagination: page.pagination,
+            skips: page.data.map(skip => {
+                console.log(skip.document_paths);
+                return {
+                    id: skip.id,
+                    status: skip.status,
+                    reason: (skip.reason ? skip.reason as Reason : Reason.OTHER) ?? Reason.OTHER,
+                    startDate: this.toDate(skip.start_date), 
+                    endDate: this.toDate(skip.end_date),
+                    files: JSON.parse(skip.document_paths)
+                }
+            })
         };
+    }
+
+    public toDate(date: string): Date {
+        return new Date(date);
     }
 }
 

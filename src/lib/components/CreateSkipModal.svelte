@@ -35,7 +35,7 @@
     <LightSelect label="Причина:" name="reason" optionsEnum={Reason} />
     <LightInput title="Дата начала:" name="startDate" type="date" bind:value={startDate} />
     <LightInput title="Действует до:" name="endDate" type="date" bind:value={endDate} />
-    <FilesList files={files} onAdd={() => {}} />
+    <FilesList files={files} canRemoeve={() => true} onAdd={() => {}} />
 </Modal>
 
 <style>

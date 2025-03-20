@@ -17,8 +17,7 @@
 
     async function onsubmit(e: SubmitEvent) {
         e.preventDefault();
-        console.log(editUser);
-        await userService.updateUser({user_id: editUser.id, roles: editUser.roles, group: editUser.group});
+        await userService.updateUser({user_id: editUser.id, roles: editUser.roles, group_number: editUser.group_id?.toString()});
     }
 </script>
 
@@ -37,7 +36,7 @@
         <button class="{editUser?.roles.includes(Role.STUDENT) ? '' : 'disabled'}" onclick={(e) => changeRoles(e, Role.STUDENT)}>{translations.get(Role.STUDENT)}</button>
     </div>
     {#if editUser?.roles.includes(Role.STUDENT)}
-        <Input inline label="Группа:" name="group" bind:value={editUser.group} type="text" width="250px" />
+        <Input inline label="Группа:" name="group" bind:value={editUser.group_id} type="number" width="250px" />
     {/if}
 </Modal>
 

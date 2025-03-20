@@ -18,6 +18,6 @@ export interface UsersPageEntry {
     name: string,
     email: string,
     skips: number,
-    group: string,
+    group_id: number,
     roles: Role[]
 }

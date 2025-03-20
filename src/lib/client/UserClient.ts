@@ -62,7 +62,8 @@ export class UserClient extends BaseClient {
                     name: user.fullName,
                     email: user.email,
                     roles: user.roles.map(role => role.name as Role),
-                    skips: user.skips_count
+                    skips: user.skips_count,
+                    group_id: user.group_id
                 }
             })
         };
