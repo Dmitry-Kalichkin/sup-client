@@ -7,7 +7,7 @@
 <div class="files-list">
     {#each files as file}
         <div class="file {canRemoeve(file) ? '' : 'not-removable'}">
-            <a href="#" download={"http://romanskm.beget.tech/storage/" + file}>{file}</a>
+            <a href={"http://romanskm.beget.tech/storage/" + file} download target="_blank" rel="noopener noreferrer">{file}</a>
             {#if canRemoeve(file)}
                 <button onclick={() => onRemove(file)}>
                     <img src="/images/trash.svg" alt="Удалить">
