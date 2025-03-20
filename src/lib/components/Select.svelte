@@ -1,14 +1,14 @@
 <script lang="ts">
-    let {label, name, optionsEnum, width} = $props();
+    let {label, name, optionsEnum, translations=null, width, value=$bindable()} = $props();
 
 </script>
 
 <div class="input-block">
     <label for={name}>{label}</label>
-    <select id={name} name={name} style="width: {width}">
+    <select id={name} name={name} bind:value={value} style="width: {width}">
         <option value={null}>Все</option>
         {#each Object.values(optionsEnum) as opt}
-            <option value={opt}>{opt}</option>
+            <option value={opt}>{translations != null ? translations.get(opt) : opt}</option>
         {/each}
     </select>
 </div>

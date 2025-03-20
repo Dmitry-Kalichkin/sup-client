@@ -1,5 +1,5 @@
 export interface CreateUser {
-    name: string
+    fullName: string
     email: string
     password: string
 }

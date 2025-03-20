@@ -11,7 +11,7 @@
     async function onsubmit(e: SubmitEvent) {
         e.preventDefault();
         console.log(name, email, password);
-        await userService.createUser({name: name, email: email, password: password});
+        await userService.createUser({fullName: name, email: email, password: password});
     }
 </script>
 

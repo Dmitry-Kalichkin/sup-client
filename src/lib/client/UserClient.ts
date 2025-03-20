@@ -51,10 +51,10 @@ export class UserClient extends BaseClient {
             users: page.data.map(user => {
                 return {
                     id: user.id,
-                    name: user.name,
+                    name: user.fullName,
                     email: user.email,
                     roles: user.roles.map(role => role.name as Role),
-                    skips: user.skips.length
+                    skips: user.skips_count
                 }
             })
         };

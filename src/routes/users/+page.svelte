@@ -6,13 +6,15 @@
     import Modal from "$lib/components/Modal.svelte";
     import CreateUserModal from "$lib/components/CreateUserModal.svelte";
     import UpdateUserModal from "$lib/components/UpdateUserModal.svelte";
+    import Input from "$lib/components/Input.svelte";
+    import Select from "$lib/components/Select.svelte";
 
     let showCreateUserModal = $state(false);
     let showCreateUsersBatchModal = $state(false);
     let showEditUserModal = $state(false);
 
-    let fullName: string | null = $state(null);
-    let role: Role | null = $state(null);
+    let fullName: string | null = null;
+    let role: Role | null = null;
     let pageNumber = $state<number>(1);
     let totalPages = $state(1);
 
@@ -29,35 +31,30 @@
         showEditUserModal = true;
         editUser = user;
     }
+
+    function onsubmit(e: SubmitEvent) {
+        e.preventDefault();
+        loadUsers();
+    }
 </script>
 
 <div class="container">
     <div>
         <h1>Пользователи</h1>
-        <form class="search-box">
-            <div class="input-block">
-                <label for="fullName">ФИО пользователя</label>
-                <input id="fullName" type="text" bind:value={fullName} placeholder="ФИО">
-            </div>
-            <div class="input-block">
-                <label for="role">Роли</label>
-                <select id="role" bind:value={role} placeholder="Роль">
-                    <option value={null}>Все роли</option>
-                    {#each Object.values(Role) as role}
-                        <option value={role}>{translations.get(role)}</option>
-                    {/each}
-                </select>
-            </div>
+        <form class="search-box" {onsubmit}>
+            <Input label="ФИО пользователя" name="fullName" type="text" width="270px" bind:value={fullName} />
+            <Select label="Роль" name="role" optionsEnum={Role} {translations} width="150px" bind:value={role} />
+            <input bind:value={pageNumber} hidden>
+
+            <button type="submit">Найти</button>
             <div class="buttons-group">
                 <button type="submit">Найти</button>
-                {#if userService.isManager()}
-                    <button onclick={() => (showCreateUserModal = true)}>
-                        <img src="/images/plus-icon.svg" alt="Добавить пользователя" />
-                    </button>
-                    <button onclick={() => (showCreateUsersBatchModal = true)}>
-                        <img src="/images/csv-icon.svg" alt="Добавить пользователей" />
-                    </button>    
-                {/if}
+                <button onclick={() => (showCreateUserModal = true)}>
+                    <img src="/images/plus-icon.svg" alt="Добавить пользователя" />
+                </button>
+                <button onclick={() => (showCreateUsersBatchModal = true)}>
+                    <img src="/images/csv-icon.svg" alt="Добавить пользователей" />
+                </button>    
             </div>
         </form>
     </div>
@@ -123,20 +120,6 @@
         border-color: black;
         width: 300px;
         border-radius: 5px;
-    }
-
-    select {
-        padding: 10px;
-        border-color: black;
-        width: 170px;
-        height: 40px;
-        border-radius: 5px;
-    }
-
-    .input-block {
-        display: flex;
-        flex-direction: column;
-        margin: 5px;
     }
 
     input:focus {

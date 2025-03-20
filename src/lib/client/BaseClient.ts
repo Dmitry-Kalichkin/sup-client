@@ -1,5 +1,5 @@
 export class BaseClient {
-    protected readonly API_URL = 'http://localhost:8000/api/';
+    protected readonly API_URL = 'http://romanskm.beget.tech/api/';
     
     protected async get(url: string, params: URLSearchParams | null): Promise<Response> {
         const requestUrl: string = this.API_URL + url + (params ? '?' + params : '');
