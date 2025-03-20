@@ -13,6 +13,12 @@ export class SkipsClient extends BaseClient {
         await this.postWithFiles('skips/' + id + '/extend', skip);
     }
 
+    public async exportSkips(parameters: SkipsParameters): Promise<string> {
+        const response = await this.get('skips/export/filtered', null);
+        const json = await response.json();
+        return json.file_url;
+    }
+
     public async changeStatus(id: number, status: Status): Promise<void> {
         await this.post('skips/' + id + '/status', { status: stringifyStatus(status) });
     }

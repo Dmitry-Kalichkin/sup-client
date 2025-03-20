@@ -5,9 +5,15 @@
     import { Status } from "$lib/data/skips/Status";
     import { page } from '$app/stores';
     import UserService from "$lib/service/UserService";
+    import { skipsService } from "$lib/service/SkipsService";
 
     function isStudentNotSelected(): boolean {
         return $page.url.pathname !== '/skips/my';
+    }
+
+    async function exportSkips(e: MouseEvent) {
+        const url = await skipsService.exportSkips({});
+        window.open("http://romanskm.beget.tech/" + url);
     }
 </script>
 
@@ -28,7 +34,7 @@
         </div>
         <button type="submit">Найти</button>
         {#if isStudentNotSelected()}
-            <button type="submit">Экспортировать</button>
+            <button type="button" onclick={exportSkips}>Экспортировать</button>
         {/if}
     </form>
     <div class="skips-list">
