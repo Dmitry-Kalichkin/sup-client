@@ -33,7 +33,7 @@
 <div class="container">
     <div>
         <h1>Пользователи</h1>
-        <div class="search-box">
+        <form class="search-box">
             <div class="input-block">
                 <label for="fullName">ФИО пользователя</label>
                 <input id="fullName" type="text" bind:value={fullName} placeholder="ФИО">
@@ -58,7 +58,7 @@
                     </button>    
                 {/if}
             </div>
-        </div>
+        </form>
     </div>
     <Page loadFunction={loadUsers} content={usersList} currentPage={pageNumber} totalPages={totalPages}/>
 </div>
