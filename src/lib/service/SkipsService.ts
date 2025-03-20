@@ -18,6 +18,10 @@ export class SkipsService {
         await this.skipsClient.createSkip(skip);
     }
 
+    public async extendSkip(id: number, skip: FormData): Promise<void> {
+        await this.skipsClient.extendSkip(id, skip);
+    }
+
     public async changeStatus(id: number, status: Status): Promise<void> {
         await this.skipsClient.changeStatus(id, status);
     }

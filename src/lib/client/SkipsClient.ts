@@ -9,6 +9,10 @@ export class SkipsClient extends BaseClient {
         await this.postWithFiles('skips', skip);
     }
 
+    public async extendSkip(id: number, skip: FormData): Promise<void> {
+        await this.postWithFiles('skips/' + id + '/extend', skip);
+    }
+
     public async changeStatus(id: number, status: Status): Promise<void> {
         await this.post('skips/' + id + '/status', { status: stringifyStatus(status) });
     }
