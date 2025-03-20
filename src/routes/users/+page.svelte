@@ -13,13 +13,15 @@
     let showCreateUsersBatchModal = $state(false);
     let showEditUserModal = $state(false);
 
-    let fullName: string | null = null;
-    let role: Role | null = null;
-    let pageNumber = $state<number>(1);
+    let searchParams = $state<URLSearchParams>(new URLSearchParams(window.location.search));
+
+    let fullName = searchParams.get("fullName") || null;
+    let role = searchParams.get("role") ? (searchParams.get("role") as Role) : null;
+    let pageNumber = $state<number>(searchParams.get("page") ? parseInt(searchParams.get("page") as string) : 1);
     let totalPages = $state(1);
 
     let editUser = $state<UsersPageEntry | null>(null);
-
+    
     async function loadUsers(): Promise<UsersPageEntry[]> {
         const usersPage: UsersPage = await userService.getUsers({fullName: fullName, role: role, page: pageNumber, per_page: 5});
         pageNumber = usersPage.pagination.current_page;
@@ -33,8 +35,15 @@
     }
 
     function onsubmit(e: SubmitEvent) {
-        e.preventDefault();
-        loadUsers();
+        const formData = new FormData(e.target as HTMLFormElement)
+        fullName = formData.get("fullName") as string;
+        role = formData.get("role") as Role;
+        pageNumber = formData.get("pageNumber") ? parseInt(formData.get("pageNumber") as string) : 1;
+        const newParams = new URLSearchParams();
+        newParams.set("fullName", fullName);
+        newParams.set("role", role);
+        newParams.set("page", pageNumber.toString());
+        searchParams = newParams;
     }
 </script>
 
@@ -42,23 +51,23 @@
     <div>
         <h1>Пользователи</h1>
         <form class="search-box" {onsubmit}>
-            <Input label="ФИО пользователя" name="fullName" type="text" width="270px" bind:value={fullName} />
-            <Select label="Роль" name="role" optionsEnum={Role} {translations} width="150px" bind:value={role} />
-            <input bind:value={pageNumber} hidden>
-
-            <button type="submit">Найти</button>
+            <Input label="ФИО пользователя" name="fullName" type="text" width="270px" value={fullName} />
+            <Select label="Роль" name="role" optionsEnum={Role} {translations} width="150px" value={role} />
+            <input name="pageNumber" bind:value={pageNumber} hidden>
             <div class="buttons-group">
                 <button type="submit">Найти</button>
-                <button onclick={() => (showCreateUserModal = true)}>
+                <button type="button" onclick={() => (showCreateUserModal = true)}>
                     <img src="/images/plus-icon.svg" alt="Добавить пользователя" />
                 </button>
-                <button onclick={() => (showCreateUsersBatchModal = true)}>
+                <button type="button" onclick={() => (showCreateUsersBatchModal = true)}>
                     <img src="/images/csv-icon.svg" alt="Добавить пользователей" />
                 </button>    
             </div>
         </form>
     </div>
-    <Page loadFunction={loadUsers} content={usersList} bind:currentPage={pageNumber} bind:totalPages={totalPages}/>
+    {#key searchParams}
+        <Page loadFunction={loadUsers} content={usersList} bind:currentPage={pageNumber} bind:totalPages={totalPages}/>        
+    {/key}
 </div>
 
 <CreateUserModal bind:showModal={showCreateUserModal} />
