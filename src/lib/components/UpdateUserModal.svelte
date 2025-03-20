@@ -7,7 +7,7 @@
 
     function changeRoles(e: MouseEvent, role: Role) {
         e.preventDefault();
-        if (editUser.roles.length > 1 && editUser?.roles.includes(role)) {
+        if (editUser.roles.length > 1 && editUser.roles.includes(role)) {
             editUser.roles = editUser.roles.filter(r => r !== role);
         } else if (!editUser?.roles.includes(role)) {
             editUser.roles = [...editUser.roles, role];
