@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { Role } from '$lib/data/user/Role';
     import userService from '$lib/service/UserService';
 </script>
 
@@ -12,13 +13,13 @@
                 Пропусков
             </p>
         </a>
-        {#if userService.isManager()}
+        {#if userService.isManager() || userService.hasRole(Role.TEACHER)}
             <a href="/skips">Пропуски</a>
         {/if}
-        {#if userService.isAuthorized()}
+        {#if userService.isAuthorized() && userService.hasRole(Role.STUDENT)}
             <a href="/skips/my">Мои пропуски</a>
         {/if}
-        {#if userService.isManager()}
+        {#if userService.isManager() || userService.hasRole(Role.TEACHER)}
             <a href="/users">Пользователи</a>
         {/if}
     </nav>

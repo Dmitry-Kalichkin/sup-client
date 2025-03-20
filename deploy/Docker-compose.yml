@@ -1,7 +1,7 @@
 services:
   sup-backend:
     platform: linux/x86_64
-    image: glekovkirillll/backend:latest
+    image: bazaranol/backend:latest
     container_name: sup-backend
     ports:
       - "8080:80"
