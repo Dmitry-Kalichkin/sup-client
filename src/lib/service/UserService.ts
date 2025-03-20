@@ -5,6 +5,7 @@ import type { Credentials } from '$lib/data/user/Credentials';
 import type { User } from '$lib/data/user/User';
 import type { UsersPage, UsersPageParameters } from '$lib/data/user/UsersPage';
 import type { CreateUser } from '$lib/data/user/CreateUser';
+import type { UpdateUser } from '$lib/data/user/UpdateUser';
 
 class UserService {
     private readonly authContext: AuthContext;
@@ -49,8 +50,12 @@ class UserService {
         window.location.assign("/login");
     }
 
-    public async createUser(user: CreateUser) {
+    public async createUser(user: CreateUser): Promise<void> {
         await this.userClient.createUser(user);
+    }
+
+    public async updateUser(updateUser: UpdateUser): Promise<void> {
+        await this.userClient.updateUser(updateUser);
     }
 
     public async getUsers(parameters: UsersPageParameters): Promise<UsersPage> {

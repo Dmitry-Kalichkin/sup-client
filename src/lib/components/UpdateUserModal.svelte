@@ -15,9 +15,10 @@
         }
     }
 
-    function onsubmit(e: SubmitEvent) {
+    async function onsubmit(e: SubmitEvent) {
         e.preventDefault();
         console.log(editUser);
+        await userService.updateUser({user_id: editUser.id, roles: editUser.roles, group: editUser.group});
     }
 </script>
 
