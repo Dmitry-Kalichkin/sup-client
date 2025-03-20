@@ -5,8 +5,8 @@
     import userService from "$lib/service/UserService";
     import { writable } from "svelte/store";
     import Modal from "$lib/components/Modal.svelte";
-    import Input from "$lib/components/Input.svelte";
     import CreateUserModal from "$lib/components/CreateUserModal.svelte";
+    import UpdateUserModal from "$lib/components/UpdateUserModal.svelte";
 
     let showCreateUserModal = $state(false);
     let showCreateUsersBatchModal = $state(false);
@@ -27,17 +27,6 @@
     function onUserClick(user: UsersPageEntry) {
         showEditUserModal = true;
         editUser = user;
-    }
-
-    function changeRoles(role: Role) {
-        if (!editUser) {
-            return;
-        }
-        if (editUser.roles.length > 1 && editUser?.roles.includes(role)) {
-            editUser.roles = editUser.roles.filter(r => r !== role);
-        } else if (!editUser?.roles.includes(role)) {
-            editUser.roles = [...editUser.roles, role];
-        }
     }
 </script>
 
@@ -75,6 +64,9 @@
 </div>
 
 <CreateUserModal bind:showModal={showCreateUserModal} />
+{#if showEditUserModal}
+    <UpdateUserModal bind:showModal={showEditUserModal} {editUser} />
+{/if}
 
 <Modal bind:showModal={showCreateUsersBatchModal}>
     {#snippet header()}
@@ -85,25 +77,6 @@
     <label for="myfile" class="label">Выберите файлы</label>
     <input type="file" class="my" id="myfile" name="myfile" multiple>
 </Modal>
-
-{#if editUser}
-    <Modal bind:showModal={showEditUserModal}>
-        {#snippet header()}
-            <h2>
-                {editUser?.name}
-            </h2>
-            <div class="title-email">{editUser?.email}</div>
-        {/snippet}
-        <div class="roles-container">
-            {#each Object.values(Role) as role}
-                <button class="{editUser?.roles.includes(role) ? '' : 'disabled'}" onclick={() => changeRoles(role)}>{translations.get(role)}</button>
-            {/each}
-        </div>
-        {#if editUser?.roles.includes(Role.STUDENT)}
-            <Input inline label="Группа:" name="group" type="text" width="250px" />
-        {/if}
-    </Modal>
-{/if}
 
 {#snippet usersList(users: UsersPageEntry[])}
     <div class="users-container">
@@ -247,24 +220,5 @@
     img {
         height: 16px;
         width: 16px;
-    }
-
-    .roles-container {
-        display: flex;
-        justify-content: center;
-        gap: 5px;
-        flex-wrap: wrap;
-    }
-
-    .title-email {
-        opacity: 0.5;
-        font-size: 18px;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    .disabled {
-        background-color: #ffffff;
-        color: black;
     }
 </style>
