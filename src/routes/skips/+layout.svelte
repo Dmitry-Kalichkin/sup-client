@@ -4,6 +4,7 @@
     import { Reason } from "$lib/data/skips/Reason";
     import { Status } from "$lib/data/skips/Status";
     import { page } from '$app/stores';
+    import UserService from "$lib/service/UserService";
 
     function isStudentNotSelected(): boolean {
         return $page.url.pathname !== '/skips/my';
@@ -26,7 +27,9 @@
             <Input label="Пропуск до" name="endTime" type="date" width="125px" />
         </div>
         <button type="submit">Найти</button>
-        <button type="submit">Экспортировать</button>
+        {#if isStudentNotSelected()}
+            <button type="submit">Экспортировать</button>
+        {/if}
     </form>
     <div class="skips-list">
         <slot />

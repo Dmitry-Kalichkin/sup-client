@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { StatusColors } from "$lib/data/skips/Status";
+    import { read } from "$app/server";
+import { Status, StatusColors } from "$lib/data/skips/Status";
     import { parseFormDate } from "$lib/utils/DateUtils";
     import FilesList from "./FilesList.svelte";
     import LightInput from "./LightInput.svelte";
@@ -19,7 +20,7 @@
     });
 </script>
 
-<Modal bind:showModal={showModal} {onsubmit}>
+<Modal bind:showModal={showModal} onsubmit={selectedSkip.status === Status.APPROVED ? onsubmit : null}>
     {#snippet header()}
         <div class="modal-header">
             <h2>
@@ -34,8 +35,8 @@
     {/snippet}
     <LightInput title="Причина:" name="reason" value={selectedSkip.reason} readonly />
     <LightInput title="Дата начала:" name="startDate" type="date" value={parseFormDate(selectedSkip.startDate)} readonly />
-    <LightInput title="Действует до:" name="endDate" type="date" bind:value={endDate} />
-    <FilesList files={selectedSkip.files} onAdd={() => {}} />
+    <LightInput title="Действует до:" name="endDate" type="date" bind:value={endDate} readonly={selectedSkip.status !== Status.APPROVED}/>
+    <FilesList files={selectedSkip.files} onAdd={selectedSkip.status === Status.APPROVED ? () => {} : null} />
 </Modal>
 
 <style>
