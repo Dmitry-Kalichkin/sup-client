@@ -1,3 +1,5 @@
+import axios, { type AxiosResponse } from "axios";
+
 export class BaseClient {
     protected readonly API_URL = 'http://romanskm.beget.tech/api/';
     
@@ -28,16 +30,13 @@ export class BaseClient {
         return response;
     }
 
-    protected async postWithFiles(url: string, body: FormData): Promise<Response> {
-        const response = await fetch(this.API_URL + url, {
-            method: 'POST',
+    protected async postWithFiles(url: string, body: FormData): Promise<AxiosResponse> {
+        const response = await axios.post(this.API_URL + url, body, {
             headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'multipart/form-data',
             },
-            body: body
-        });
+          });
         return response;
     }
 }

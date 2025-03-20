@@ -8,6 +8,11 @@ export function parseFormDate(date: Date): string {
     return date.getFullYear() + "-" + (month < 10 ? "0" + month : month) + "-" + (date.getDate() < 10 ? "0" + date.getDate() : date.getDate());
 }
 
+export function toServerFormat(date: string): string {
+    const [year, month, day] = date.split("-");
+    return day + "." + month + "." + year;
+}
+
 export const MonthsNameForDate = new Map<number, string>([
     [1, "Января"],
     [2, "Февраля"],
