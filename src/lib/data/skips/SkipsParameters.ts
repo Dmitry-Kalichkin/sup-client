@@ -10,5 +10,6 @@ export interface MySkipsParameters {
 }
 
 export interface SkipsParameters extends MySkipsParameters {
-    fullName?: string | null
+    fullName?: string | null,
+    groupId?: number | null
 }

@@ -64,6 +64,9 @@
         if (searchParams.get("fullName")) {
             params.fullName = searchParams.get("fullName") as string;
         }
+        if (searchParams.get("group")) {
+            params.groupId = parseInt(searchParams.get("group") as string);
+        }
         if (searchParams.get("status")) {
             params.status = searchParams.get("status") as Status;
         }

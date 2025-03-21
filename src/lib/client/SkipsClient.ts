@@ -18,6 +18,9 @@ export class SkipsClient extends BaseClient {
         if (parameters.fullName) {
             params.set('student_name', parameters.fullName);
         }
+        if (parameters.groupId) {
+            params.set('group_id', parameters.groupId.toString());
+        }
         if (parameters.status) {
             params.set('status', stringifyStatus(parameters.status));
         }
@@ -43,6 +46,9 @@ export class SkipsClient extends BaseClient {
         const params = new URLSearchParams();
         if (parameters.fullName) {
             params.set('student_name', parameters.fullName);
+        }
+        if (parameters.groupId) {
+            params.set('group_id', parameters.groupId.toString());
         }
         if (parameters.status) {
             params.set('status', stringifyStatus(parameters.status));
