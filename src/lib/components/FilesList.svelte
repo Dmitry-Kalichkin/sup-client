@@ -31,7 +31,7 @@
     }
 
     .file {
-        max-width: 300px;
+        max-width: 285px;
         overflow: hidden;
         display: flex;
         gap: 5px;
