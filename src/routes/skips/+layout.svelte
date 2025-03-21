@@ -7,6 +7,8 @@
     import { skipsService } from "$lib/service/SkipsService";
     import type { Group } from "$lib/data/Group";
     import { groupService } from "$lib/service/GroupService";
+    import type { SkipsParameters } from "$lib/data/skips/SkipsParameters";
+    import { toServerFormat } from "$lib/utils/DateUtils";
 
     let searchParams = $state<URLSearchParams>(new URLSearchParams(window.location.search));
     let fullName = $state(searchParams.get("fullName") || null);
@@ -58,7 +60,23 @@
     }
 
     async function exportSkips(e: MouseEvent) {
-        const url = await skipsService.exportSkips({});
+        const params: SkipsParameters = { page: pageNumber };
+        if (searchParams.get("fullName")) {
+            params.fullName = searchParams.get("fullName") as string;
+        }
+        if (searchParams.get("status")) {
+            params.status = searchParams.get("status") as Status;
+        }
+        if (searchParams.get("reason")) {
+            params.reason = searchParams.get("reason") as Reason;
+        }
+        if (searchParams.get("startDate")) {
+            params.startDate = toServerFormat(searchParams.get("startDate") as string);
+        }
+        if (searchParams.get("endDate")) {
+            params.endDate = toServerFormat(searchParams.get("endDate") as string);
+        }
+        const url = await skipsService.exportSkips(params);
         window.open("http://romanskm.beget.tech/" + url);
     }
 
