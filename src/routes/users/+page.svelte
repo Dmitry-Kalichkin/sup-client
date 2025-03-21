@@ -53,6 +53,11 @@
         }
         return translation;
     }
+
+    function onSubmitUsersBatch(e: SubmitEvent) {
+        const formData = new FormData(e.target as HTMLFormElement);
+        userService.createUsersBatch(formData);
+    }
 </script>
 
 <div class="container">
@@ -83,14 +88,14 @@
     <UpdateUserModal bind:showModal={showEditUserModal} {editUser} />
 {/if}
 
-<Modal bind:showModal={showCreateUsersBatchModal}>
+<Modal bind:showModal={showCreateUsersBatchModal} onsubmit={onSubmitUsersBatch}>
     {#snippet header()}
         <h2>
             Создать пользователей
         </h2>
     {/snippet}
-    <label for="myfile" class="label">Выберите файлы</label>
-    <input type="file" class="my" id="myfile" name="myfile" multiple>
+    <label for="file" class="label">Выберите файлы</label>
+    <input type="file" class="my" id="myfile" name="file">
 </Modal>
 
 {#snippet usersList(users: UsersPageEntry[])}

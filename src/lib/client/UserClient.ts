@@ -31,6 +31,10 @@ export class UserClient extends BaseClient {
         }
     }
 
+    public async createUsersBatch(users: FormData): Promise<void> {
+        await this.postWithFiles('upload-csv', users);
+    }
+
     public async updateUser(updateUser: UpdateUser): Promise<void> {
         const response = await this.post('roles-change', updateUser);
         if (!response.ok) {

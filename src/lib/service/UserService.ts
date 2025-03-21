@@ -57,6 +57,10 @@ class UserService {
         await this.userClient.createUser(user);
     }
 
+    public async createUsersBatch(users: FormData): Promise<void> {
+        await this.userClient.createUsersBatch(users);
+    }
+
     public async updateUser(updateUser: UpdateUser): Promise<void> {
         await this.userClient.updateUser(updateUser);
     }
