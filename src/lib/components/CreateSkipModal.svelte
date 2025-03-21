@@ -12,6 +12,7 @@
     async function onsubmit(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement);
         const skip = new FormData();
+        skip.set("reason", formData.get("reason") as string ?? "");
         skip.set("start_date", toServerFormat(formData.get("start_date") as string ?? ""));
         skip.set("end_date", toServerFormat(formData.get("end_date") as string ?? ""));
         formData.getAll("documents").forEach((file) => {
