@@ -24,7 +24,25 @@ export class SkipsClient extends BaseClient {
     }
 
     public async getSkips(parameters: SkipsParameters): Promise<SkipsPage> {
-        const response = await this.get('skips', null);
+        const params = new URLSearchParams();
+        if (parameters.fullName) {
+            params.set('student_name', parameters.fullName);
+        }
+        if (parameters.status) {
+            params.set('status', stringifyStatus(parameters.status));
+        }
+        if (parameters.reason) {
+            params.set('reason', parameters.reason.toString());
+        }
+        if (parameters.startDate) {
+            params.set('start_date', parameters.startDate);
+        }
+        if (parameters.endDate) {
+            params.set('end_date', parameters.endDate);
+        }
+        params.set('page', parameters.page.toString());
+        params.set('per_page', 5);
+        const response = await this.get('skips', params);
         const page = await response.json();
         return {
             pagination: page.pagination,

@@ -1,5 +1,5 @@
 <script lang="ts">
-    let {label, name, optionsEnum, translations=null, width, value=$bindable()} = $props();
+    let {label, name, optionsEnum, translations=null, width, value=$bindable(), getValue=null} = $props();
 
 </script>
 
@@ -8,7 +8,7 @@
     <select id={name} name={name} bind:value={value} style="width: {width}">
         <option value={null}>Все</option>
         {#each Object.values(optionsEnum) as opt}
-            <option value={opt}>{translations != null ? translations.get(opt) : opt}</option>
+            <option value={getValue != null ? getValue(opt) : opt}>{translations != null ? translations.get(opt) : opt}</option>
         {/each}
     </select>
 </div>
