@@ -1,8 +1,15 @@
 <script lang="ts">
-    let {loadFunction, content, currentPage, totalPages, pagesLocation = "center"} = $props();
+    let {loadFunction, content, currentPage=$bindable(), totalPages=$bindable(), pagesLocation = "center"} = $props();
     
     function getPageNumbers(): number[] {
         return [...Array(totalPages).keys()].map(n => n + 1);
+    }
+
+    function changePage(pageNumber: number) {
+        currentPage = pageNumber;
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set("page", pageNumber.toString());
+        window.location.search = searchParams.toString();
     }
 </script>
 
@@ -17,7 +24,7 @@
         <ul class="page-numbers" style="justify-content: {pagesLocation}">
             {#each getPageNumbers() as pageNumber}
                 <li>
-                    <button class="page-btn {$currentPage === pageNumber ? 'active-page' : ''}" onclick={() => $currentPage = pageNumber}>
+                    <button class="page-btn {currentPage === pageNumber ? 'active-page' : ''}" onclick={() => changePage(pageNumber)}>
                         {pageNumber}
                     </button>
                 </li>

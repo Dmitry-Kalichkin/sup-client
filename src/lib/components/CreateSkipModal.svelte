@@ -1,5 +1,7 @@
 <script lang="ts">
     import { Reason } from "$lib/data/skips/Reason";
+    import { skipsService } from "$lib/service/SkipsService";
+    import { toServerFormat } from "$lib/utils/DateUtils";
     import FilesList from "./FilesList.svelte";
     import LightInput from "./LightInput.svelte";
     import LightSelect from "./LightSelect.svelte";
@@ -7,24 +9,22 @@
 
     let { showModal=$bindable() } = $props();
 
-    let reason = $state(Reason.ILL);
-    let startDate = $state<string | null>(null);
-    let endDate = $state<string | null>(null);
-    let files = $state<any[]>([]);
-
-    function onsubmit(e: SubmitEvent) {
-        console.log(reason, startDate, endDate, files);
-    }
-
-    function onClose() {
-        reason = Reason.ILL;
-        startDate = null;
-        endDate = null;
-        files = [];
+    async function onsubmit(e: SubmitEvent) {
+        const formData = new FormData(e.target as HTMLFormElement);
+        const skip = new FormData();
+        skip.set("reason", formData.get("reason") as string ?? "");
+        skip.set("start_date", toServerFormat(formData.get("start_date") as string ?? ""));
+        skip.set("end_date", toServerFormat(formData.get("end_date") as string ?? ""));
+        formData.getAll("documents").forEach((file) => {
+            if (file) {
+                skip.append('documents[]', file);
+            }
+        });
+        await skipsService.createSkip(skip);
     }
 </script>
 
-<Modal bind:showModal={showModal} {onsubmit} {onClose}>
+<Modal bind:showModal={showModal} {onsubmit}>
     {#snippet header()}
         <div class="modal-header">
             <h2>
@@ -33,9 +33,9 @@
         </div>
     {/snippet}
     <LightSelect label="Причина:" name="reason" optionsEnum={Reason} />
-    <LightInput title="Дата начала:" name="startDate" type="date" bind:value={startDate} />
-    <LightInput title="Действует до:" name="endDate" type="date" bind:value={endDate} />
-    <FilesList files={files} onAdd={() => {}} />
+    <LightInput title="Дата начала:" name="start_date" type="date" />
+    <LightInput title="Действует до:" name="end_date" type="date" />
+    <input type="file" name="documents" multiple>
 </Modal>
 
 <style>

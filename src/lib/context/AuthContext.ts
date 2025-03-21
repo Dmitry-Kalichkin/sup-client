@@ -3,6 +3,7 @@ import { Role } from "$lib/data/user/Role";
 export class AuthContext {
     private static readonly TOKEN_KEY = "token";
     private static readonly USERNAME_KEY = "username";
+    private static readonly EMAIL_KEY = "email";
     private static readonly ROLE_KEY = "role";
     private readonly localStorage: Storage;
 
@@ -30,20 +31,31 @@ export class AuthContext {
         this.localStorage.setItem(AuthContext.USERNAME_KEY, username);
     }
 
+    public getEmail(): string | null {
+        return this.localStorage.getItem(AuthContext.EMAIL_KEY);
+    }
+
+    public setEmail(email: string) {
+        this.localStorage.setItem(AuthContext.EMAIL_KEY, email);
+    }
+
     public removeUsername() {
         this.localStorage.removeItem(AuthContext.USERNAME_KEY);
     }
 
-    public getRole(): Role | null {
+    public getRoles(): Role[] | null {
         const role = this.localStorage.getItem(AuthContext.ROLE_KEY);
-        return role != null ? Role[role as keyof typeof Role] : null;
+        if (role == null) {
+            return null;
+        }
+        return role.split(",").map(r => r as Role);
     }
 
-    public setRole(role: Role) {
-        this.localStorage.setItem(AuthContext.ROLE_KEY, role);
+    public setRoles(roles: Role[]) {
+        this.localStorage.setItem(AuthContext.ROLE_KEY, roles.join(","));
     }
 
-    public removeRole() {
+    public removeRoles() {
         this.localStorage.removeItem(AuthContext.ROLE_KEY);
     }
 }

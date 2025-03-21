@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Status, StatusColors } from "$lib/data/skips/Status";
+    import { skipsService } from "$lib/service/SkipsService";
     import { parseFormDate } from "$lib/utils/DateUtils";
     import FilesList from "./FilesList.svelte";
     import LightInput from "./LightInput.svelte";
@@ -27,8 +28,8 @@
     <FilesList files={selectedSkip.files} />
     {#if selectedSkip.status === Status.PENDING}
         <div class="btn-container">
-            <button class="approve-btn">Подтвердить</button>
-            <button class="reject-btn">Отклонить</button>
+            <button class="approve-btn" onclick ={() => skipsService.changeStatus(selectedSkip.id, Status.APPROVED)}>Подтвердить</button>
+            <button class="reject-btn" onclick={() => skipsService.changeStatus(selectedSkip.id, Status.REJECTED)}>Отклонить</button>
         </div>
     {/if}
 </Modal>

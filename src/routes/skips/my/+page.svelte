@@ -3,17 +3,39 @@
     import  Page  from "$lib/components/Page.svelte";
     import type { MySkipsPage, MySkipsPageEntry, Skip, SkipExtension } from "$lib/data/skips/Skips";
     import { writable } from "svelte/store";
-    import { parseDate } from "$lib/utils/DateUtils";
-    import { StatusColors } from "$lib/data/skips/Status";
+    import { parseDate, toServerFormat } from "$lib/utils/DateUtils";
+    import { Status, StatusColors } from "$lib/data/skips/Status";
     import ExtendSkipModal from "$lib/components/ExtendSkipModal.svelte";
     import CreateSkipModal from "$lib/components/CreateSkipModal.svelte";
+    import type { MySkipsParameters } from "$lib/data/skips/SkipsParameters";
+    import type { Reason } from "$lib/data/skips/Reason";
 
     let showExtendSkipModal = $state(false);
     let showCreateSkipModal = $state(false);
     let selectedSkip = $state<MySkipsPageEntry | null>(null);
+    
+        let searchParams = $state<URLSearchParams>(new URLSearchParams(window.location.search));
+    let pageNumber = $state<number>(searchParams.get("page") ? parseInt(searchParams.get("page") as string) : 1);
+    let totalPages = $state(1);
 
     async function loadMySkips(): Promise<MySkipsPage> {
-        return await skipsService.getMySkips({page: 1, status: null, reason: null, startDate: null, endDate: null});
+        const params: MySkipsParameters = { page: pageNumber };
+        if (searchParams.get("status")) {
+            params.status = searchParams.get("status") as Status;
+        }
+        if (searchParams.get("reason")) {
+            params.reason = searchParams.get("reason") as Reason;
+        }
+        if (searchParams.get("startDate")) {
+            params.startDate = toServerFormat(searchParams.get("startDate") as string);
+        }
+        if (searchParams.get("endDate")) {
+            params.endDate = toServerFormat(searchParams.get("endDate") as string);
+        }
+        const skips = await skipsService.getMySkips(params);
+        pageNumber = skips.pagination.current_page;
+        totalPages = skips.pagination.last_page;
+        return skips;
     }
 
     function pickSkip(skip: MySkipsPageEntry) {
@@ -28,7 +50,7 @@
         <img src="/images/plus-icon.svg" alt="Добавить пропуск">
     </button>
 </div>
-<Page loadFunction={loadMySkips} content={skipsList} currentPage={writable(1)} totalPages={10} pagesLocation="start"/>
+<Page loadFunction={loadMySkips} content={skipsList} currentPage={pageNumber} totalPages={totalPages} pagesLocation="start"/>
 <CreateSkipModal bind:showModal={showCreateSkipModal} />
 {#if selectedSkip}
     <ExtendSkipModal bind:showModal={showExtendSkipModal} {selectedSkip} />

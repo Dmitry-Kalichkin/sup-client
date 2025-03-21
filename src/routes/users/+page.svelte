@@ -3,23 +3,29 @@
     import { Role, translations } from "$lib/data/user/Role";
     import type { UsersPageEntry, UsersPage } from "$lib/data/user/UsersPage";
     import userService from "$lib/service/UserService";
-    import { writable } from "svelte/store";
     import Modal from "$lib/components/Modal.svelte";
+    import CreateUserModal from "$lib/components/CreateUserModal.svelte";
+    import UpdateUserModal from "$lib/components/UpdateUserModal.svelte";
     import Input from "$lib/components/Input.svelte";
+    import Select from "$lib/components/Select.svelte";
 
     let showCreateUserModal = $state(false);
     let showCreateUsersBatchModal = $state(false);
     let showEditUserModal = $state(false);
-    let fullName: string | null = $state(null);
-    let roles: Role[] | null = $state(null);
-    let pageNumber = writable<number>(1);
-    let totalPages: number = $state(1);
-    let editUser = $state<UsersPageEntry | null>(null);
 
+    let searchParams = $state<URLSearchParams>(new URLSearchParams(window.location.search));
+
+    let fullName = searchParams.get("fullName") || null;
+    let role = searchParams.get("role") ? (searchParams.get("role") as Role) : null;
+    let pageNumber = $state<number>(searchParams.get("page") ? parseInt(searchParams.get("page") as string) : 1);
+    let totalPages = $state(1);
+
+    let editUser = $state<UsersPageEntry | null>(null);
+    
     async function loadUsers(): Promise<UsersPageEntry[]> {
-        const usersPage: UsersPage = await userService.getUsers({fullName: fullName, roles: roles, page: $pageNumber});
-        $pageNumber = usersPage.page;
-        totalPages = usersPage.totalPages;
+        const usersPage: UsersPage = await userService.getUsers({fullName: fullName, role: role, page: pageNumber, per_page: 5});        
+        pageNumber = usersPage.pagination.current_page;
+        totalPages = usersPage.pagination.last_page;
         return usersPage.users;
     }
 
@@ -28,100 +34,78 @@
         editUser = user;
     }
 
-    function changeRoles(role: Role) {
-        if (!editUser) {
-            return;
+    function onsubmit(e: SubmitEvent) {
+        const formData = new FormData(e.target as HTMLFormElement)
+        fullName = formData.get("fullName") as string;
+        role = formData.get("role") as Role;
+        pageNumber = formData.get("pageNumber") ? parseInt(formData.get("pageNumber") as string) : 1;
+        const newParams = new URLSearchParams();
+        newParams.set("fullName", fullName);
+        newParams.set("role", role);
+        newParams.set("page", pageNumber.toString());
+        searchParams = newParams;
+    }
+
+    function getRoleItem(role: Role, group_id: number) {
+        const translation = translations.get(role);
+        if (role === Role.STUDENT) {
+            return translation + (group_id != null ? ` (${group_id})` : '');
         }
-        if (editUser.roles.length > 1 && editUser?.roles.includes(role)) {
-            editUser.roles = editUser.roles.filter(r => r !== role);
-        } else if (!editUser?.roles.includes(role)) {
-            editUser.roles = [...editUser.roles, role];
-        }
+        return translation;
+    }
+
+    function onSubmitUsersBatch(e: SubmitEvent) {
+        const formData = new FormData(e.target as HTMLFormElement);
+        userService.createUsersBatch(formData);
     }
 </script>
 
 <div class="container">
     <div>
         <h1>Пользователи</h1>
-        <div class="search-box">
-            <div class="input-block">
-                <label for="fullName">ФИО пользователя</label>
-                <input id="fullName" type="text" bind:value={fullName} placeholder="ФИО">
-            </div>
-            <div class="input-block">
-                <label for="role">Роли</label>
-                <select id="role" bind:value={roles} placeholder="Роль" multiple>
-                    <option value={null}>Все роли</option>
-                    {#each Object.values(Role) as role}
-                        <option value={role}>{translations.get(role)}</option>
-                    {/each}
-                </select>
-            </div>
+        <form class="search-box" {onsubmit}>
+            <Input label="ФИО пользователя" name="fullName" type="text" width="270px" value={fullName} />
+            <Select label="Роль" name="role" optionsEnum={Role} {translations} width="150px" value={role} />
+            <input name="pageNumber" bind:value={pageNumber} hidden>
             <div class="buttons-group">
-                <button>Найти</button>
-                {#if userService.isManager()}
-                    <button onclick={() => (showCreateUserModal = true)}>
-                        <img src="/images/plus-icon.svg" alt="Добавить пользователя" />
-                    </button>
-                    <button onclick={() => (showCreateUsersBatchModal = true)}>
-                        <img src="/images/csv-icon.svg" alt="Добавить пользователей" />
-                    </button>    
-                {/if}
+                <button type="submit">Найти</button>
+                <button type="button" onclick={() => (showCreateUserModal = true)}>
+                    <img src="/images/plus-icon.svg" alt="Добавить пользователя" />
+                </button>
+                <button type="button" onclick={() => (showCreateUsersBatchModal = true)}>
+                    <img src="/images/csv-icon.svg" alt="Добавить пользователей" />
+                </button>    
             </div>
-        </div>
+        </form>
     </div>
-    <Page loadFunction={loadUsers} content={usersList} currentPage={pageNumber} totalPages={totalPages}/>
+    {#key searchParams}
+        <Page loadFunction={loadUsers} content={usersList} bind:currentPage={pageNumber} bind:totalPages={totalPages}/>        
+    {/key}
 </div>
 
-<Modal bind:showModal={showCreateUserModal}>
-    {#snippet header()}
-        <h2>
-            Создать пользователя
-        </h2>
-    {/snippet}
+<CreateUserModal bind:showModal={showCreateUserModal} />
+{#if showEditUserModal}
+    <UpdateUserModal bind:showModal={showEditUserModal} {editUser} />
+{/if}
 
-    <Input label="ФИО" name="fullName" type="text" width="250px" />
-    <Input label="Email" name="email" type="email" width="250px" />
-    <Input label="Пароль" name="password" type="password" width="250px" />
-</Modal>
-
-<Modal bind:showModal={showCreateUsersBatchModal}>
+<Modal bind:showModal={showCreateUsersBatchModal} onsubmit={onSubmitUsersBatch}>
     {#snippet header()}
         <h2>
             Создать пользователей
         </h2>
     {/snippet}
-    <label for="myfile" class="label">Выберите файлы</label>
-    <input type="file" class="my" id="myfile" name="myfile" multiple>
+    <label for="file" class="label">Выберите файлы</label>
+    <input type="file" class="my" id="myfile" name="file">
 </Modal>
-
-{#if editUser}
-    <Modal bind:showModal={showEditUserModal}>
-        {#snippet header()}
-            <h2>
-                {editUser?.fullName}
-            </h2>
-            <div class="title-email">{editUser?.email}</div>
-        {/snippet}
-        <div class="roles-container">
-            {#each Object.values(Role) as role}
-                <button class="{editUser?.roles.includes(role) ? '' : 'disabled'}" onclick={() => changeRoles(role)}>{translations.get(role)}</button>
-            {/each}
-        </div>
-        {#if editUser?.roles.includes(Role.STUDENT)}
-            <Input inline label="Группа:" name="group" type="text" width="250px" />
-        {/if}
-    </Modal>
-{/if}
 
 {#snippet usersList(users: UsersPageEntry[])}
     <div class="users-container">
         {#each users as user}
             <div class="user" onclick={() => onUserClick(user)}>
                 <div>
-                    <div class="user-name">{user.fullName}</div>
+                    <div class="user-name">{user.name}</div>
                     <div class="user-email">{user.email}</div>
-                    <div class="user-roles">{user.roles.map(role => translations.get(role)).join(', ')}</div>
+                    <div class="user-roles">{user.roles.map(role => getRoleItem(role, user.group_id)).join(', ')}</div>
                 </div>
                 <div class="skips">
                     Пропуски: {user.skips}
@@ -158,20 +142,6 @@
         border-color: black;
         width: 300px;
         border-radius: 5px;
-    }
-
-    select {
-        padding: 10px;
-        border-color: black;
-        width: 170px;
-        height: 40px;
-        border-radius: 5px;
-    }
-
-    .input-block {
-        display: flex;
-        flex-direction: column;
-        margin: 5px;
     }
 
     input:focus {
@@ -256,24 +226,5 @@
     img {
         height: 16px;
         width: 16px;
-    }
-
-    .roles-container {
-        display: flex;
-        justify-content: center;
-        gap: 5px;
-        flex-wrap: wrap;
-    }
-
-    .title-email {
-        opacity: 0.5;
-        font-size: 18px;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    .disabled {
-        background-color: #ffffff;
-        color: black;
     }
 </style>

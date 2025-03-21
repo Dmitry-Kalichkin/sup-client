@@ -1,3 +1,4 @@
+import type { Pagination } from "../Pagination"
 import type { Reason } from "./Reason"
 import type { Status } from "./Status"
 
@@ -22,9 +23,7 @@ interface BasicPageEntry {
 }
 
 interface GenericSkipsPage<T extends BasicPageEntry> {
-    page: number,
-    totalPages: number,
-    currenctSize: number,
+    pagination: Pagination
     skips: T[]
 }
 
